@@ -78,6 +78,7 @@ jobs:
         username: ${{ secrets.USERNAME }}
         password: ${{ secrets.PASSWORD }}
         port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSH_KEY }}
         script: deploy
         
   
