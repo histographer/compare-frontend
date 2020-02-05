@@ -21,6 +21,19 @@ env:
 
 jobs:
   # Run tests.
+  deploy:
+    name: Deploy to server
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Login to SSH and deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSH_KEY }}
+        script: deploy
   # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
@@ -64,22 +77,7 @@ jobs:
           docker push $IMAGE_ID:$VERSION
           
           
-          
-  deploy:
-    needs: push
-    name: Deploy to server
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Login to SSH and deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        password: ${{ secrets.PASSWORD }}
-        port: ${{ secrets.PORT }}
-        key: ${{ secrets.SSH_KEY }}
-        script: deploy
+        
         
   
 
