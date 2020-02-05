@@ -62,3 +62,24 @@ jobs:
           echo VERSION=$VERSION
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
+          
+          
+          
+  deploy:
+    needs: push
+    name: Deploy to server
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Login to SSH and deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: deploy
+        
+  
+
+    
