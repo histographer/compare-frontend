@@ -26,13 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Run SSH command
-        uses: garygrossgarten/github-action-ssh@v0.3.0
+      - name: SSH Execute Commands
+        uses: JimCronqvist/action-ssh@0.1.1
         with:
           command: ls
-          host: ${{ secrets.HOST }}
+          hosts: ${{ secrets.HOSTS }}
           username: ${{ secrets.USERNAME }}
           privateKey: ${{ secrets.KEY }}
+          debug: true
           
         
         
