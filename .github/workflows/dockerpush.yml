@@ -1,5 +1,4 @@
-  
-name: Docker
+name: Deploy on push to master
 
 
 on:
