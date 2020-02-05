@@ -26,14 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: SSH Execute Commands
-        uses: JimCronqvist/action-ssh@0.1.1
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@master
         with:
-          command: ls
-          hosts: ${{ secrets.HOSTS }}
+          host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          privateKey: ${{ secrets.KEY }}
-          debug: true
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: whoami
           
         
         
