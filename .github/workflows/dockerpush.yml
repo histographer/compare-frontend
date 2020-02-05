@@ -26,15 +26,13 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Login to SSH and deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.HOST }}
-        username: ${{ secrets.USERNAME }}
-        port: ${{ secrets.PORT }}
-        key: ${{ secrets.KEY }}
-        script: deploy
-        debug: true
+      - name: Run SSH command
+        uses: garygrossgarten/github-action-ssh@v0.3.0
+        with:
+          command: ls
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          privateKey: ${{ secrets.KEY }}
           
         
         
