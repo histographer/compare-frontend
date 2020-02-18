@@ -26,8 +26,10 @@
           :extent="extent"
           crossOrigin="Anonymous"
           ref="baseSource"
+          @mounted="setBaseSource()"
         />
       </vl-layer-tile>
+
     </vl-map>
 
     <button @click="$emit('chooseImage', image.id)">Velg</button>
@@ -36,6 +38,10 @@
 
 <script>
 import { AbstractImage } from 'cytomine-client';
+import { constLib, operation } from '../../utils/color-manipulation';
+
+
+console.log('done');
 
 export default {
   name: 'CytomineImage',
@@ -49,6 +55,7 @@ export default {
       rotation: 0,
       geolocPosition: undefined,
       imageServerURLs: [],
+      baseSource: null,
     };
   },
   computed: {
@@ -63,7 +70,17 @@ export default {
     },
     baseLayerURLs() {
       const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
+      console.log(this.imageServerURLs.map(url => url + params));
       return this.imageServerURLs.map(url => url + params);
+    },
+    lib() {
+      return {
+        ...constLib,
+        brightness: this.imageWrapper.colors.brightness,
+        contrast: this.imageWrapper.colors.contrast,
+        saturation: this.imageWrapper.colors.saturation,
+        hue: this.imageWrapper.colors.hue,
+      };
     },
   },
   methods: {
@@ -71,6 +88,10 @@ export default {
       this.imageServerURLs = await new AbstractImage({
         id: this.image.baseImage,
       }).fetchImageServers();
+    },
+    async setBaseSource() {
+      await this.$refs.baseSource.$createPromise;
+      this.baseSource = this.$refs.baseSource.$source;
     },
   },
   async created() {

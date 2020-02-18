@@ -13,7 +13,10 @@ module.exports = {
     "vue/return-in-computed-property": "off",
     "vue/no-unused-components": "off",
     "no-prototype-builtins": "off",
-    "no-unused-vars": "off"
+    "no-unused-vars": "off",
+    "no-param-reassign":"off",
+    "no-use-before-define":"off",
+    "max-len":"off"
   },
   parserOptions: {
     parser: 'babel-eslint',

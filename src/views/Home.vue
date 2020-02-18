@@ -35,7 +35,9 @@ export default {
   methods: {
     async fetchImages(collection) {
       const images = await collection.fetchAll();
-      return images.array;
+      console.log(images.array);
+      console.log(images.array[0]);
+      return [images.array[0]];
     },
     chooseImage(args) {
       console.log(args);
