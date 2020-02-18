@@ -1,17 +1,22 @@
 module.exports = {
-  root: true,
-  env: {
-    node: true,
+  'root': true,
+  'env': {
+    'node': true
   },
-  extends: [
+  'extends': [
     'plugin:vue/essential',
-    '@vue/airbnb',
+    'eslint:recommended'
   ],
   rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'indent': ['error', 2, {'SwitchCase': 1}],
+    'quotes': ['error', 'single', {'avoidEscape': true}],
+    'brace-style': ['error', 'stroustrup'],
+    'array-bracket-spacing': ['error', 'never'],
+    'camelcase': ['error', {allow: ['$_veeValidate']}],
+    'semi': ['error', 'always'],
+    'no-console': ['off']
   },
-  parserOptions: {
-    parser: 'babel-eslint',
-  },
+  'parserOptions': {
+    'parser': 'babel-eslint'
+  }
 };
