@@ -1,10 +1,6 @@
 import Vue from 'vue';
 import { Cytomine, User, ProjectCollection } from 'cytomine-client';
 import VueLayers from 'vuelayers';
-import ZoomifySource from './vuelayers-suppl/zoomify-source';
-import RasterSource from './vuelayers-suppl/raster-source';
-import TranslateInteraction from './vuelayers-suppl/translate-interaction';
-import RotateInteraction from './vuelayers-suppl/rotate-interaction'; // needs css-loader
 
 import App from './App.vue';
 import router from './router';
@@ -29,10 +25,6 @@ async function connectToCytomineServer() {
   return { user, projects };
 }
 Vue.use(VueLayers);
-Vue.use(ZoomifySource);
-Vue.use(RasterSource);
-Vue.use(TranslateInteraction);
-Vue.use(RotateInteraction);
 
 connectToCytomineServer()
   .then(({ user, projects }) => {
