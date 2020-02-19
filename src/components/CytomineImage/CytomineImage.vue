@@ -7,7 +7,6 @@
 
 <script>
 import { AbstractImage } from 'cytomine-client';
-import { constLib, operation } from '../../utils/color-manipulation';
 
 export default {
   name: 'CytomineImage',
