@@ -38,7 +38,8 @@ export default {
       return images.array;
     },
     chooseImage(args) {
-      console.log(args);
+      const got = args;
+      return got;
     },
   },
   async created() {

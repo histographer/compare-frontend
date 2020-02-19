@@ -38,7 +38,6 @@ export default {
     },
     lib() {
       return {
-        ...constLib,
         brightness: this.imageWrapper.colors.brightness,
         contrast: this.imageWrapper.colors.contrast,
         saturation: this.imageWrapper.colors.saturation,
