@@ -1,37 +1,6 @@
 <template>
   <div class="container">
-    <vl-map
-      :data-projection="projectionName"
-      :load-tiles-while-animating="true"
-      :load-tiles-while-interacting="true"
-      @pointermove="projectedMousePosition = $event.coordinate"
-      ref="map"
-    >
-      <vl-view
-        :center.sync="center"
-        :zoom.sync="zoom"
-        :rotation.sync="rotation"
-        :max-zoom="image.depth"
-        :max-resolution="Math.pow(2, image.depth)"
-        :extent="extent"
-        :projection="projectionName"
-        ref="view"
-      />
-
-      <vl-layer-tile :extent="extent" ref="baseLayer">
-        <vl-source-zoomify
-          :projection="projectionName"
-          :urls="baseLayerURLs"
-          :size="imageSize"
-          :extent="extent"
-          crossOrigin="Anonymous"
-          ref="baseSource"
-          @mounted="setBaseSource()"
-        />
-      </vl-layer-tile>
-
-    </vl-map>
-
+    <img :src="image.macroURL" />
     <button @click="$emit('chooseImage', image.id)">Velg</button>
   </div>
 </template>
@@ -39,9 +8,6 @@
 <script>
 import { AbstractImage } from 'cytomine-client';
 import { constLib, operation } from '../../utils/color-manipulation';
-
-
-console.log('done');
 
 export default {
   name: 'CytomineImage',
@@ -53,7 +19,6 @@ export default {
       zoom: 2,
       center: [0, 0],
       rotation: 0,
-      geolocPosition: undefined,
       imageServerURLs: [],
       baseSource: null,
     };
@@ -70,7 +35,6 @@ export default {
     },
     baseLayerURLs() {
       const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
-      console.log(this.imageServerURLs.map(url => url + params));
       return this.imageServerURLs.map(url => url + params);
     },
     lib() {
