@@ -1,18 +1,55 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <h1>Pat or Nat</h1>
+    <div class="images">
+      <template v-for="image in images">
+        <CytomineImage :key="image.id" :image="image" v-on:chooseImage="chooseImage"/>
+      </template>
+    </div>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import { ImageInstanceCollection } from 'cytomine-client';
+import CytomineImage from '../components/CytomineImage/CytomineImage.vue';
 
 export default {
   name: 'home',
   components: {
-    HelloWorld,
+    CytomineImage,
+  },
+  data() {
+    return {
+      images: [],
+    };
+  },
+  computed: {
+    imageCollection() {
+      // Set desired project to the first available for now...
+      return new ImageInstanceCollection({
+        filterKey: 'project',
+        filterValue: this.$store.state.projects[0].id,
+      });
+    },
+  },
+  methods: {
+    async fetchImages(collection) {
+      const images = await collection.fetchAll();
+      return images.array;
+    },
+    chooseImage(args) {
+      console.log(args);
+    },
+  },
+  async created() {
+    this.images = await this.fetchImages(this.imageCollection);
   },
 };
 </script>
+
+<style scoped>
+.images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+</style>

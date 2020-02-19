@@ -10,6 +10,13 @@ module.exports = {
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    "vue/return-in-computed-property": "off",
+    "vue/no-unused-components": "off",
+    "no-prototype-builtins": "off",
+    "no-unused-vars": "off",
+    "no-param-reassign":"off",
+    "no-use-before-define":"off",
+    "max-len":"off"
   },
   parserOptions: {
     parser: 'babel-eslint',
