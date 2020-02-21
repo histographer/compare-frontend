@@ -1,23 +1,22 @@
 <template>
-  <div class="container">
+  <div class="container" ref="container">
     <vl-map
       :load-tiles-while-animating="true"
       :load-tiles-while-interacting="true"
       data-projection="EPSG:4326"
-      :wrapX="false"
-      style="height: 400px"
+      style="height: 400px; width: 500px"
       class="viewer"
     >
       <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
-      <vl-layer-tile>
-        <vl-source-xyz
-          :url="tileURL"
-          :max-zoom="image.magnification"
-          :min-zoom="0"
-          :wrapX="false"
-          cross-origin="Anonymous"
-          :tile-size="tileSize"
+      <vl-layer-tile :extent="extent" ref="baseLayer">
+        <vl-source-zoomify
+          :projection="projectionName"
+          :urls="baseLayerURLs"
+          :size="imageSize"
+          :extent="extent"
+          crossOrigin="Anonymous"
+          ref="baseSource"
         />
       </vl-layer-tile>
     </vl-map>
@@ -35,8 +34,8 @@ export default {
   },
   data() {
     return {
-      zoom: 1,
-      center: [0, 0],
+      zoom: null,
+      center: [(this.image.width / this.image.height) / 5, (this.image.width / this.image.height) / 5],
       rotation: 0,
       imageServerURLs: [],
       baseSource: null,
@@ -52,12 +51,9 @@ export default {
     imageSize() {
       return [this.image.width, this.image.height];
     },
-    tileSize() {
-      return [120, 120];
-    },
-    tileURL() {
-      const params = `&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
-      return this.imageServerURLs[0] + params;
+    baseLayerURLs() {
+      const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
+      return this.imageServerURLs.map(url => url + params);
     },
   },
   methods: {
@@ -66,14 +62,18 @@ export default {
         id: this.image.baseImage,
       }).fetchImageServers();
     },
+    setInitialZoom() {
+      this.zoom = this.image.depth;
+    },
   },
   async created() {
     await this.fetchImageServerURLs();
+    this.setInitialZoom();
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
   border: 1px solid black;
   display: grid;
@@ -82,7 +82,6 @@ export default {
   margin: auto;
   padding: 15px;
   width: fit-content;
-
   > .viewer {
     height: 400px;
   }

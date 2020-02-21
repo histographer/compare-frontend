@@ -1,15 +1,15 @@
 import Vue from 'vue';
 import { Cytomine, User, ProjectCollection } from 'cytomine-client';
-import { Map, TileLayer, XyzSource } from 'vuelayers';
+import VueLayers from 'vuelayers';
+import ZoomifySource from './components/utils/zoomify-source';
 
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import 'vuelayers/lib/style.css';
 
-Vue.use(Map);
-Vue.use(XyzSource);
-Vue.use(TileLayer);
+Vue.use(VueLayers);
+Vue.use(ZoomifySource);
 
 
 // Setup connection to Cytomine
