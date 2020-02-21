@@ -1,6 +1,26 @@
 <template>
   <div class="container">
-    <img :src="image.macroURL" />
+    <vl-map
+      :load-tiles-while-animating="true"
+      :load-tiles-while-interacting="true"
+      data-projection="EPSG:4326"
+      :wrapX="false"
+      style="height: 400px"
+      class="viewer"
+    >
+      <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+
+      <vl-layer-tile>
+        <vl-source-xyz
+          :url="tileURL"
+          :max-zoom="image.magnification"
+          :min-zoom="0"
+          :wrapX="false"
+          cross-origin="Anonymous"
+          :tile-size="tileSize"
+        />
+      </vl-layer-tile>
+    </vl-map>
     <button @click="$emit('chooseImage', image.id)">Velg</button>
   </div>
 </template>
@@ -15,7 +35,7 @@ export default {
   },
   data() {
     return {
-      zoom: 2,
+      zoom: 1,
       center: [0, 0],
       rotation: 0,
       imageServerURLs: [],
@@ -32,17 +52,12 @@ export default {
     imageSize() {
       return [this.image.width, this.image.height];
     },
-    baseLayerURLs() {
-      const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
-      return this.imageServerURLs.map(url => url + params);
+    tileSize() {
+      return [120, 120];
     },
-    lib() {
-      return {
-        brightness: this.imageWrapper.colors.brightness,
-        contrast: this.imageWrapper.colors.contrast,
-        saturation: this.imageWrapper.colors.saturation,
-        hue: this.imageWrapper.colors.hue,
-      };
+    tileURL() {
+      const params = `&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
+      return this.imageServerURLs[0] + params;
     },
   },
   methods: {
@@ -50,10 +65,6 @@ export default {
       this.imageServerURLs = await new AbstractImage({
         id: this.image.baseImage,
       }).fetchImageServers();
-    },
-    async setBaseSource() {
-      await this.$refs.baseSource.$createPromise;
-      this.baseSource = this.$refs.baseSource.$source;
     },
   },
   async created() {
@@ -70,5 +81,10 @@ export default {
   grid-gap: 20px;
   margin: auto;
   padding: 15px;
+  width: fit-content;
+
+  > .viewer {
+    height: 400px;
+  }
 }
 </style>
