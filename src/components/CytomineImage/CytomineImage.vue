@@ -72,13 +72,6 @@ export default {
 };
 </script>
 
-<style>
-  .ol-control {
-    top: 1em;
-    left: 1em;
-  }
-</style>
-
 <style scoped lang="scss">
 @import "../../style/colors.scss";
 
