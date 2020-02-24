@@ -4,7 +4,6 @@
       :load-tiles-while-animating="true"
       :load-tiles-while-interacting="true"
       data-projection="EPSG:4326"
-      style="height: 400px; width: 500px"
       class="viewer"
     >
       <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
@@ -63,7 +62,7 @@ export default {
       }).fetchImageServers();
     },
     setInitialZoom() {
-      this.zoom = this.image.depth;
+      this.zoom = this.image.depth * 1.25;
     },
   },
   async created() {
@@ -73,17 +72,53 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.container {
-  border: 1px solid black;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-gap: 20px;
-  margin: auto;
-  padding: 15px;
-  width: fit-content;
-  > .viewer {
-    height: 400px;
+<style>
+  .ol-control {
+    top: 1em;
+    left: 1em;
   }
+</style>
+
+<style scoped lang="scss">
+@import "../../style/colors.scss";
+
+.container {
+  display: grid;
+  box-shadow: 0 5px 25px -3px rgba(0,0,0, 0.25);
+  background: white;
+  grid-template-columns: 1fr;
+  grid-gap: 10px;
+  border-radius: 30px;
+  margin: auto;
+  padding: 25px 15px;
+  width: calc(100% - 30px);
+
+  > .viewer {
+    min-height: 40rem;
+    box-shadow: 0 0 10px -5px rgba(0,0,0, 0.25);
+    border-radius: 30px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+   > button {
+     background: $primary-color;
+     font-family: 'Comfortaa', sans-serif;
+     max-height: 5rem;
+     max-width: 400px;
+     width: 100%;
+     margin: auto;
+     min-height: 60px;
+     font-size: 24px;
+     font-weight: 100;
+     border-radius: 50px;
+     border: none;
+     color: white;
+
+     &:hover {
+       background: lighten($primary-color, 5);
+       cursor: pointer;
+     }
+   }
 }
 </style>

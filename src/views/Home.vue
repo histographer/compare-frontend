@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Pat or Nat</h1>
+    <h1>Hvilket av snittene ser best ut?</h1>
     <div class="images">
       <template v-for="image in images">
         <CytomineImage :key="image.id" :image="image" v-on:chooseImage="chooseImage"/>
@@ -38,8 +38,7 @@ export default {
       return images.array;
     },
     chooseImage(args) {
-      const got = args;
-      return got;
+      return args;
     },
   },
   async created() {
@@ -48,9 +47,19 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .images {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  justify-items: stretch;
+  align-content: center;
+  min-height: 90vh;
+}
+h1 {
+ color: black;
+ font-weight: 400;
+ font-size: 48px;
+ margin-bottom: 0;
 }
 </style>
