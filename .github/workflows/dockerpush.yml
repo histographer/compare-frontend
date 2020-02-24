@@ -1,27 +1,20 @@
 name: Deploy on push to master
 
-
 on:
   push:
-    # Publish `master` as Docker `latest` image.
     branches:
       - master
 
-    # Publish `v1.2.3` tags as releases.
     tags:
       - v*
 
-  # Run tests for any PRs.
   pull_request:
 
 env:
-  # TODO: Change variable to your image's name.
-  IMAGE_NAME: image
+  IMAGE_NAME: pat-or-nat-frontend
 
 
 jobs:
-  # Run tests.
-  # See also https://docs.docker.com/docker-hub/builds/automated-testing/
   test:
     runs-on: ubuntu-latest
 
@@ -30,16 +23,13 @@ jobs:
 
       - name: Run tests
         run: |
-          docker build . --file Dockerfile
-  # Push image to GitHub Package Registry.
-  # See also https://docs.docker.com/docker-hub/builds/
-  push:
-    # Ensure test job passes before pushing image.
-    needs: test
+          npm test
 
+
+  deploy:
+    needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'push'
-
     steps:
       - uses: actions/checkout@v2
 
@@ -49,7 +39,7 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
 
-      - name: Push image
+      - name: Push image to registry
         run: |
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME
           # Strip git ref prefix from version
@@ -62,26 +52,14 @@ jobs:
           echo VERSION=$VERSION
           docker tag image $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-          
-          
-          
-  deploy:
-    needs: push
-    name: Deploy to server
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: SSH & deployscript
+          echo "::set-output name=image_url::$IMAGE_ID:$VERSION"
+        id: docker-push
+
+      - name: Run deploy.sh via SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
-          script: deploy
-          
-        
-        
-  
-
-    
+          script: ../cytomine/bootstrap/redeploy.sh pat-or-nat-frontend
