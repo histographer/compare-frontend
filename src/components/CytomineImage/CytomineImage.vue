@@ -4,7 +4,7 @@
       :load-tiles-while-animating="true"
       :load-tiles-while-interacting="true"
       data-projection="EPSG:4326"
-      class="viewer"
+      class="container__viewer"
     >
       <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
@@ -19,7 +19,7 @@
         />
       </vl-layer-tile>
     </vl-map>
-    <button @click="$emit('chooseImage', image.id)">Velg</button>
+    <button class="container__button" @click="$emit('chooseImage', image.id)">Velg</button>
   </div>
 </template>
 
@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       zoom: null,
-      center: [(this.image.width / this.image.height) / 5, (this.image.width / this.image.height) / 5],
+      center: [0, 0],
       rotation: 0,
       imageServerURLs: [],
       baseSource: null,
@@ -62,12 +62,24 @@ export default {
       }).fetchImageServers();
     },
     setInitialZoom() {
-      this.zoom = this.image.depth * 1.25;
+      let zoom = 1;
+      let { width } = this.image;
+      const { clientWidth } = this.$refs.container;
+      while (width > clientWidth) {
+        zoom += (clientWidth / width) * 1.75;
+        width -= clientWidth;
+      }
+      this.zoom = zoom;
+    },
+    setImageCenter() {
+      const { width, height } = this.image;
+      this.center = [(width / height) / 5, (width / height) / 5];
     },
   },
   async created() {
     await this.fetchImageServerURLs();
     this.setInitialZoom();
+    this.setImageCenter();
   },
 };
 </script>
@@ -86,7 +98,7 @@ export default {
   padding: 25px 15px;
   width: calc(100% - 30px);
 
-  > .viewer {
+  > .container__viewer {
     min-height: 40rem;
     box-shadow: 0 0 10px -5px rgba(0,0,0, 0.25);
     border-radius: 30px;
@@ -94,7 +106,7 @@ export default {
     width: 100%;
     height: 100%;
   }
-   > button {
+   > .container__button {
      background: $primary-color;
      font-family: 'Comfortaa', sans-serif;
      max-height: 5rem;
