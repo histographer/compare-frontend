@@ -1,11 +1,15 @@
 import Vue from 'vue';
 import { Cytomine, User, ProjectCollection } from 'cytomine-client';
 import VueLayers from 'vuelayers';
+import ZoomifySource from './components/utils/zoomify-source';
 
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import 'vuelayers/lib/style.css';
+
+Vue.use(VueLayers);
+Vue.use(ZoomifySource);
 
 
 // Setup connection to Cytomine
@@ -24,7 +28,6 @@ async function connectToCytomineServer() {
   const projects = await ProjectCollection.fetchAll();
   return { user, projects };
 }
-Vue.use(VueLayers);
 
 connectToCytomineServer()
   .then(({ user, projects }) => {

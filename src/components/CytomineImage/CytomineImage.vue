@@ -1,7 +1,25 @@
 <template>
-  <div class="container">
-    <img :src="image.macroURL" />
-    <button @click="$emit('chooseImage', image.id)">Velg</button>
+  <div class="container" ref="container">
+    <vl-map
+      :load-tiles-while-animating="true"
+      :load-tiles-while-interacting="true"
+      data-projection="EPSG:4326"
+      class="container__viewer"
+    >
+      <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+
+      <vl-layer-tile :extent="extent" ref="baseLayer">
+        <vl-source-zoomify
+          :projection="projectionName"
+          :urls="baseLayerURLs"
+          :size="imageSize"
+          :extent="extent"
+          crossOrigin="Anonymous"
+          ref="baseSource"
+        />
+      </vl-layer-tile>
+    </vl-map>
+    <button class="container__button" @click="$emit('chooseImage', image.id)">Velg</button>
   </div>
 </template>
 
@@ -15,7 +33,7 @@ export default {
   },
   data() {
     return {
-      zoom: 2,
+      zoom: null,
       center: [0, 0],
       rotation: 0,
       imageServerURLs: [],
@@ -36,14 +54,6 @@ export default {
       const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
       return this.imageServerURLs.map(url => url + params);
     },
-    lib() {
-      return {
-        brightness: this.imageWrapper.colors.brightness,
-        contrast: this.imageWrapper.colors.contrast,
-        saturation: this.imageWrapper.colors.saturation,
-        hue: this.imageWrapper.colors.hue,
-      };
-    },
   },
   methods: {
     async fetchImageServerURLs() {
@@ -51,24 +61,69 @@ export default {
         id: this.image.baseImage,
       }).fetchImageServers();
     },
-    async setBaseSource() {
-      await this.$refs.baseSource.$createPromise;
-      this.baseSource = this.$refs.baseSource.$source;
+    setInitialZoom() {
+      let zoom = 1;
+      let { width } = this.image;
+      const { clientWidth } = this.$refs.container;
+      while (width > clientWidth) {
+        zoom += (clientWidth / width) * 1.75;
+        width -= clientWidth;
+      }
+      this.zoom = zoom;
+    },
+    setImageCenter() {
+      const { width, height } = this.image;
+      this.center = [(width / height) / 5, (width / height) / 5];
     },
   },
   async created() {
     await this.fetchImageServerURLs();
+    this.setInitialZoom();
+    this.setImageCenter();
   },
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "../../style/colors.scss";
+
 .container {
-  border: 1px solid black;
   display: grid;
+  box-shadow: 0 5px 25px -3px rgba(0,0,0, 0.25);
+  background: white;
   grid-template-columns: 1fr;
-  grid-gap: 20px;
+  grid-gap: 10px;
+  border-radius: 30px;
   margin: auto;
-  padding: 15px;
+  padding: 25px 15px;
+  width: calc(100% - 30px);
+
+  > .container__viewer {
+    min-height: 40rem;
+    box-shadow: 0 0 10px -5px rgba(0,0,0, 0.25);
+    border-radius: 30px;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+  }
+   > .container__button {
+     background: $primary-color;
+     font-family: 'Comfortaa', sans-serif;
+     max-height: 5rem;
+     max-width: 400px;
+     width: 100%;
+     margin: auto;
+     min-height: 60px;
+     font-size: 24px;
+     font-weight: 100;
+     border-radius: 50px;
+     border: none;
+     color: white;
+
+     &:hover {
+       background: lighten($primary-color, 5);
+       cursor: pointer;
+     }
+   }
 }
 </style>
