@@ -19,7 +19,25 @@
         />
       </vl-layer-tile>
     </vl-map>
-    <button class="container__button" @click="$emit('chooseImage', image.id)">Velg</button>
+    <vs-button
+      v-if="chosen"
+      flat
+      circle
+      class="container__button"
+      color="#A581EF"
+    >
+      Valgt <i class="bx bx-check" />
+    </vs-button>
+    <vs-button
+      v-else
+      flat
+      circle
+      color="#A581EF"
+      class="container__button"
+      @click="$emit('chooseImage', image.id)"
+    >
+      Velg
+    </vs-button>
   </div>
 </template>
 
@@ -30,6 +48,7 @@ export default {
   name: 'CytomineImage',
   props: {
     image: Object,
+    chosen: Boolean,
   },
   data() {
     return {
@@ -107,23 +126,12 @@ export default {
     height: 100%;
   }
    > .container__button {
-     background: $primary-color;
-     font-family: 'Comfortaa', sans-serif;
      max-height: 5rem;
      max-width: 400px;
      width: 100%;
      margin: auto;
      min-height: 60px;
      font-size: 24px;
-     font-weight: 100;
-     border-radius: 50px;
-     border: none;
-     color: white;
-
-     &:hover {
-       background: lighten($primary-color, 5);
-       cursor: pointer;
-     }
    }
 }
 </style>

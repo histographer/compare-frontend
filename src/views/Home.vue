@@ -3,9 +3,24 @@
     <h1>Hvilket av snittene ser best ut?</h1>
     <div class="images">
       <template v-for="image in images">
-        <CytomineImage :key="image.id" :image="image" v-on:chooseImage="chooseImage"/>
+        <CytomineImage
+          :key="image.id"
+          :image="image"
+          :chosen="image.id === chosenImage"
+          v-on:chooseImage="chooseImage"
+        />
       </template>
     </div>
+    <vs-button
+      v-if="chosenImage !== null"
+      floating
+      circle
+      color="success"
+      size="xl"
+      class="nextButton"
+    >
+      Neste<i class="bx bx-caret-right" />
+    </vs-button>
   </div>
 </template>
 
@@ -21,6 +36,7 @@ export default {
   data() {
     return {
       images: [],
+      chosenImage: null,
     };
   },
   computed: {
@@ -37,8 +53,23 @@ export default {
       const images = await collection.fetchAll();
       return images.array;
     },
-    chooseImage(args) {
-      return args;
+    chooseImage(newId) {
+      this.chosenImage = newId;
+      console.log(newId);
+    },
+    sendChoosen() {
+      const looserId = this.images.find(image => image.id !== this.chosenImage).id;
+      const POST = {
+        user: 'string',
+        winner: {
+          id: this.chosenImage,
+          comment: 'blabla',
+        },
+        loser: {
+          id: looserId,
+          comment: 'balblaba',
+        },
+      };
     },
   },
   async created() {
@@ -57,9 +88,15 @@ export default {
   min-height: 90vh;
 }
 h1 {
- color: black;
- font-weight: 400;
- font-size: 48px;
- margin-bottom: 0;
+  color: black;
+  font-weight: 400;
+  font-size: 48px;
+  margin-bottom: 0;
+}
+
+.nextButton {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
 }
 </style>

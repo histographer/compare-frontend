@@ -1,16 +1,18 @@
 import Vue from 'vue';
 import { Cytomine, User, ProjectCollection } from 'cytomine-client';
 import VueLayers from 'vuelayers';
+import Vuesax from 'vuesax';
 import ZoomifySource from './components/utils/zoomify-source';
 
 import App from './App.vue';
 import router from './router';
 import store from './store';
 import 'vuelayers/lib/style.css';
+import 'vuesax/dist/vuesax.css';
 
 Vue.use(VueLayers);
 Vue.use(ZoomifySource);
-
+Vue.use(Vuesax);
 
 // Setup connection to Cytomine
 
