@@ -18,6 +18,7 @@
       color="success"
       size="xl"
       class="nextButton"
+      @click="sendChoosen"
     >
       Neste<i class="bx bx-caret-right" />
     </vs-button>
@@ -55,7 +56,6 @@ export default {
     },
     chooseImage(newId) {
       this.chosenImage = newId;
-      console.log(newId);
     },
     sendChoosen() {
       const looserId = this.images.find(image => image.id !== this.chosenImage).id;
@@ -70,6 +70,7 @@ export default {
           comment: 'balblaba',
         },
       };
+      console.log(POST);
     },
   },
   async created() {

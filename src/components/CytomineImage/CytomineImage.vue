@@ -24,6 +24,7 @@
       flat
       circle
       class="container__button"
+      active
       color="#A581EF"
     >
       Valgt <i class="bx bx-check" />
