@@ -149,3 +149,24 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+  .ol-zoom {
+    top: 1rem !important;
+    left: 1rem !important;
+    background: none !important;
+    padding: 5px !important;
+  }
+
+  .ol-zoom-in {
+    border-radius: 10px 10px 0 0 !important;
+  }
+
+  .ol-zoom-out {
+    border-radius: 0 0 10px 10px !important;
+  }
+
+  .ol-control > button {
+    background: rgba(165, 129, 239, 0.8) !important;
+  }
+</style>

@@ -70,11 +70,20 @@ export default {
           comment: 'balblaba',
         },
       };
-      console.log(POST);
+      this.fetchImages(this.imageCollection);
+      this.chosenImage = null;
     },
   },
   async created() {
+    const loading = this.$vs.loading(
+      {
+        type: 'corners',
+        color: '#A581EF',
+        opacity: 1,
+      },
+    );
     this.images = await this.fetchImages(this.imageCollection);
+    setTimeout(() => loading.close(), 700); // Added delay for user friendliness
   },
 };
 </script>
@@ -86,18 +95,17 @@ export default {
   grid-gap: 10px;
   justify-items: stretch;
   align-content: center;
-  min-height: 90vh;
+  min-height: 100%;
 }
 h1 {
   color: black;
   font-weight: 400;
   font-size: 48px;
-  margin-bottom: 0;
 }
 
 .nextButton {
   position: absolute;
-  right: 1rem;
-  bottom: 1rem;
+  right: 10px;
+  bottom: 10px;
 }
 </style>
