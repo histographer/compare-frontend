@@ -19,21 +19,13 @@
         />
       </vl-layer-tile>
     </vl-map>
-    <vs-button
-      v-if="chosen"
-      flat
-      circle
-      class="container__button"
-      active
-      color="#A581EF"
-    >
+    <vs-button v-if="chosen" relief circle class="container__button chosen" active color="#f7f3ff">
       Valgt <i class="bx bx-check" />
     </vs-button>
     <vs-button
       v-else
-      flat
       circle
-      color="#A581EF"
+      color="#f7f3ff"
       class="container__button"
       @click="$emit('chooseImage', image.id)"
     >
@@ -93,7 +85,7 @@ export default {
     },
     setImageCenter() {
       const { width, height } = this.image;
-      this.center = [(width / height) / 5, (width / height) / 5];
+      this.center = [width / height / 5, width / height / 5];
     },
   },
   async created() {
@@ -109,8 +101,7 @@ export default {
 
 .container {
   display: grid;
-  box-shadow: 0 5px 25px -3px rgba(0,0,0, 0.25);
-  background: white;
+  background: $background-color;
   grid-template-columns: 1fr;
   grid-gap: 10px;
   border-radius: 30px;
@@ -120,19 +111,25 @@ export default {
 
   > .container__viewer {
     min-height: 40rem;
-    box-shadow: 0 0 10px -5px rgba(0,0,0, 0.25);
     border-radius: 30px;
-    overflow: hidden;
+    box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
     width: 100%;
+    overflow: hidden;
     height: 100%;
   }
-   > .container__button {
-     max-height: 5rem;
-     max-width: 400px;
-     width: 100%;
-     margin: auto;
-     min-height: 60px;
-     font-size: 24px;
-   }
+  > .container__button {
+    max-height: 5rem;
+    max-width: 400px;
+    box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
+    width: 100%;
+    color: #969696;
+    margin: 1rem auto auto;
+    min-height: 60px;
+    font-size: 24px;
+  }
+
+  > .chosen {
+    box-shadow: inset 7px 7px 14px #e1dde8, inset -7px -7px 14px #ffffff;
+  }
 }
 </style>

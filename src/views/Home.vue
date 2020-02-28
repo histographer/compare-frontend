@@ -15,7 +15,7 @@
       v-if="chosenImage !== null"
       floating
       circle
-      color="success"
+      color="#f7f3ff"
       size="xl"
       class="nextButton"
       @click="sendChoosen"
@@ -75,13 +75,11 @@ export default {
     },
   },
   async created() {
-    const loading = this.$vs.loading(
-      {
-        type: 'corners',
-        color: '#A581EF',
-        opacity: 1,
-      },
-    );
+    const loading = this.$vs.loading({
+      type: 'corners',
+      color: '#f7f3ff',
+      opacity: 1,
+    });
     this.images = await this.fetchImages(this.imageCollection);
     setTimeout(() => loading.close(), 700); // Added delay for user friendliness
   },
@@ -107,5 +105,10 @@ h1 {
   position: absolute;
   right: 10px;
   bottom: 10px;
+  box-shadow: 8px 8px 15px #e6e2ed, -8px -8px 15px #ffffff;
+
+  &:hover {
+    box-shadow: 0;
+  }
 }
 </style>
