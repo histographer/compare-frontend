@@ -21,7 +21,7 @@ const routes = [
     path: '*',
     name: '404-not-found',
     component: NotFound,
-  },
+  }
 ];
 
 const router = new VueRouter({
@@ -32,7 +32,6 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   const isLoggedIn = window.localStorage.getItem('isLoggedIn');
-  console.log(isLoggedIn);
   if (to.name !== 'session' && isLoggedIn === null) next({ name: 'session' });
   else next();
 });
