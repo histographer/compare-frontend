@@ -8,8 +8,8 @@ export default new Vuex.Store({
     baseUrl: null,
   },
   mutations: {
-    changeBaseURL(payload) {
-      this.state.baseUrl = payload.newUrl;
+    changeBaseURL(state, payload) {
+      state.baseUrl = payload.newUrl;
     },
   },
   actions: {},
