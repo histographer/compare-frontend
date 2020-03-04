@@ -21,7 +21,7 @@ const routes = [
     path: '*',
     name: '404-not-found',
     component: NotFound,
-  }
+  },
 ];
 
 const router = new VueRouter({
