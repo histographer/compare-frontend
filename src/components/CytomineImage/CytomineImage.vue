@@ -11,7 +11,7 @@
       <vl-layer-tile :extent="extent" ref="baseLayer">
         <vl-source-zoomify
           :projection="projectionName"
-          :urls="baseLayerURLs"
+          :urls="imageServerURLs"
           :size="imageSize"
           :extent="extent"
           crossOrigin="Anonymous"
@@ -35,8 +35,6 @@
 </template>
 
 <script>
-import { AbstractImage } from 'cytomine-client';
-
 export default {
   name: 'CytomineImage',
   props: {
@@ -48,7 +46,6 @@ export default {
       zoom: null,
       center: [0, 0],
       rotation: 0,
-      imageServerURLs: [],
       baseSource: null,
     };
   },
@@ -62,17 +59,11 @@ export default {
     imageSize() {
       return [this.image.width, this.image.height];
     },
-    baseLayerURLs() {
-      const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
-      return this.imageServerURLs.map(url => url + params);
+    imageServerURLs() {
+      return this.image.imageServerURLs;
     },
   },
   methods: {
-    async fetchImageServerURLs() {
-      this.imageServerURLs = await new AbstractImage({
-        id: this.image.baseImage,
-      }).fetchImageServers();
-    },
     setInitialZoom() {
       let zoom = 1;
       let { width } = this.image;
@@ -89,7 +80,6 @@ export default {
     },
   },
   async created() {
-    await this.fetchImageServerURLs();
     this.setInitialZoom();
     this.setImageCenter();
   },

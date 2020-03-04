@@ -5,19 +5,13 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    user: null,
-    projects: null,
+    baseUrl: null,
   },
   mutations: {
-    setUser(state, payload) {
-      state.user = payload.user;
-    },
-    setProjects(state, payload) {
-      state.projects = payload.projects;
+    changeBaseURL(payload) {
+      this.state.baseUrl = payload.newUrl;
     },
   },
-  actions: {
-  },
-  modules: {
-  },
+  actions: {},
+  modules: {},
 });

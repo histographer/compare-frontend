@@ -26,8 +26,8 @@
 </template>
 
 <script>
-import { ImageInstanceCollection } from 'cytomine-client';
 import CytomineImage from '../components/CytomineImage/CytomineImage.vue';
+import { postData, getData } from '../utils/requests';
 
 export default {
   name: 'home',
@@ -40,38 +40,32 @@ export default {
       chosenImage: null,
     };
   },
-  computed: {
-    imageCollection() {
-      // Set desired project to the first available for now...
-      return new ImageInstanceCollection({
-        filterKey: 'project',
-        filterValue: this.$store.state.projects[0].id,
-      });
-    },
-  },
   methods: {
-    async fetchImages(collection) {
-      const images = await collection.fetchAll();
-      return images.array;
+    async fetchImages() {
+      return getData(`${this.$store.state.baseUrl}/getImages`);
     },
     chooseImage(newId) {
       this.chosenImage = newId;
     },
-    sendChoosen() {
+    async sendChoosen() {
       const looserId = this.images.find(image => image.id !== this.chosenImage).id;
-      const POST = {
-        user: 'string',
-        winner: {
+      const data = {
+        chosen: {
           id: this.chosenImage,
-          comment: 'blabla',
         },
-        loser: {
+        other: {
           id: looserId,
-          comment: 'balblaba',
         },
       };
-      this.fetchImages(this.imageCollection);
+      await postData(`${this.$store.state.baseUrl}/scoring`, data);
+      const loading = this.$vs.loading({
+        type: 'corners',
+        color: '#f7f3ff',
+        opacity: 1,
+      });
+      this.images = await this.fetchImages();
       this.chosenImage = null;
+      setTimeout(() => loading.close(), 700); // Added delay for user friendliness
     },
   },
   async created() {
@@ -80,7 +74,7 @@ export default {
       color: '#f7f3ff',
       opacity: 1,
     });
-    this.images = await this.fetchImages(this.imageCollection);
+    this.images = await this.fetchImages();
     setTimeout(() => loading.close(), 700); // Added delay for user friendliness
   },
 };
@@ -108,7 +102,7 @@ h1 {
   box-shadow: 8px 8px 15px #e6e2ed, -8px -8px 15px #ffffff;
 
   &:hover {
-    box-shadow: 0;
+    box-shadow: none;
   }
 }
 </style>
