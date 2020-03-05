@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     async fetchImages() {
-      return getData(`${this.$store.state.baseUrl}/getImages`);
+      return getData(`${this.$store.state.baseUrl}/imagePair`);
     },
     chooseImage(newId) {
       this.chosenImage = newId;

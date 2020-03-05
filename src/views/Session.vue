@@ -8,18 +8,20 @@
         valgene du gjør.
       </p>
       <div class="screen">
-        <vs-radio color="#A581EF" v-model="screen" val="medical_grade">
-          Medisinsk
-        </vs-radio>
-        <vs-radio color="#A581EF" v-model="screen" val="professional_grade">
-          Profesjonell
-        </vs-radio>
-        <vs-radio color="#A581EF" v-model="screen" val="normal_grade">
-          Vanlig
-        </vs-radio>
-        <vs-radio color="#A581EF" v-model="screen" val="mobile_grade">
-          Mobil
-        </vs-radio>
+        <vs-select placeholder="Velg skjerm-type" color="#A581EF" v-model="screen">
+          <vs-option label="Medisinsk" value="medical_grade">
+            Medisinsk
+          </vs-option>
+          <vs-option label="Profesjonell" value="professional_grade">
+            Profesjonell
+          </vs-option>
+          <vs-option label="Vanlig" value="normal_grade">
+            Vanlig
+          </vs-option>
+          <vs-option label="Mobil" value="mobile_grade">
+            Mobil
+          </vs-option>
+        </vs-select>
       </div>
     </div>
     <div class="container">
@@ -42,7 +44,7 @@ export default {
   name: 'Session',
   data() {
     return {
-      screen: null,
+      screen: '',
       location: '',
     };
   },
@@ -65,7 +67,7 @@ export default {
         color: 'danger',
         position: 'bottom-right',
         title: 'Oops! Du glemte å fylle ut alt!',
-        text: 'For å gå videre må du fylle ut både feltet for skjerm og institusjon.',
+        text: 'For å gå videre må du fylle ut både feltet for skjerm-type og institusjon.',
       });
     },
   },
@@ -87,6 +89,10 @@ h3 {
 
 .container {
   margin: 55px 0;
+
+  ~ .container {
+    margin-top: 100px;
+  }
 }
 
 .screen {
@@ -136,16 +142,41 @@ h3 {
   font-size: 1.2rem !important;
 }
 
-.vs-radio {
+.vs-select {
+  margin-top: 15px;
+}
+
+.vs-select-content {
+  width: 400px !important;
+  max-width: 400px !important;
+}
+
+.vs-select__input {
   background: $background-color !important;
-  box-shadow: 2px 2px 8px #d2cfd9, -2px -2px 8px #ffffff;
+  box-shadow: 5px 5px 10px #d2cfd9, -5px -5px 10px #ffffff;
+  height: 60px;
+  font-size: 1.2rem;
+
+  &:hover {
+    box-shadow: 5px 5px 10px #d2cfd9, -5px -5px 10px #ffffff !important;
+  }
+
+  &:focus {
+    box-shadow: inset 2px 2px 4px #d2cfd9, inset -2px -2px 4px #ffffff !important;
+  }
 }
 
-.vs-radio-content .active {
-  --vs-color: red !important;
+.vs-select__label {
+  font-size: 1.2rem !important;
+  height: 40px;
 }
 
-.vs-radio__label {
-  margin: 0 10px !important;
+.vs-select__option {
+  font-size: 1.2rem;
+  padding: 10px !important;
+}
+
+.vs-select__options {
+  background: $background-color !important;
 }
 </style>
