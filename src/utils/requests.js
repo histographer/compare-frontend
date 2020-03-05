@@ -12,10 +12,10 @@ export async function postData(url, data) {
     referrerPolicy: 'no-referrer', // no-referrer, *client
     body: JSON.stringify(data), // body data type must match "Content-Type" header
   });
-  return response.json(); // parses JSON response into native JavaScript objects
+  return response; // parses JSON response into native JavaScript objects
 }
 
 export async function getData(url = '') {
-  const response = await (fetch(url));
+  const response = await (fetch(`http://${url}`));
   return response.json();
 }
