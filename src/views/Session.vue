@@ -30,7 +30,7 @@
         Vi ønsker å vite hvilken institusjon du tilhører for å forstå hvordan de forskjellige institusjonene velger. Merk at du ikke vil bli satt opp som representant for institusjonen din.
       </p>
       <div class="location">
-        <vs-input class="location__input" v-model="location" state="#f7f3ff" label-placeholder="Eks. St. Olavs Hospital" style="font-size: 24px" />
+        <vs-input autocomplete="off" class="location__input" v-model="location" state="#f7f3ff" label-placeholder="Eks. St. Olavs Hospital" style="font-size: 24px" />
       </div>
     </div>
     <vs-button class="continue-button" size="xl" color="#A581EF" transparent @click="handleClick">Fortsett <i class="bx bx-caret-right"/></vs-button>
