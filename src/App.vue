@@ -5,8 +5,9 @@
 </template>
 
 <style lang="scss">
+  @import './style/colors.scss';
 body{
-  background: #e9e9e9;
+  background: $background-color;
 }
 #app {
   font-family: 'Comfortaa', Helvetica, Arial, sans-serif;

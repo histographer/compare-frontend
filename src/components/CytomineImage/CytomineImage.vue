@@ -19,24 +19,33 @@
         />
       </vl-layer-tile>
     </vl-map>
-    <button class="container__button" @click="$emit('chooseImage', image.id)">Velg</button>
+    <vs-button v-if="chosen" relief circle class="container__button chosen" active color="#f7f3ff">
+      Valgt <i class="bx bx-check" />
+    </vs-button>
+    <vs-button
+      v-else
+      circle
+      color="#f7f3ff"
+      class="container__button"
+      @click="$emit('chooseImage', image.id)"
+    >
+      Velg
+    </vs-button>
   </div>
 </template>
 
 <script>
-import { AbstractImage } from 'cytomine-client';
-
 export default {
   name: 'CytomineImage',
   props: {
     image: Object,
+    chosen: Boolean,
   },
   data() {
     return {
       zoom: null,
       center: [0, 0],
       rotation: 0,
-      imageServerURLs: [],
       baseSource: null,
     };
   },
@@ -50,36 +59,34 @@ export default {
     imageSize() {
       return [this.image.width, this.image.height];
     },
+    imageServerURLs() {
+      return this.image.imageServerURLs;
+    },
     baseLayerURLs() {
       const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
       return this.imageServerURLs.map(url => url + params);
     },
   },
   methods: {
-    async fetchImageServerURLs() {
-      this.imageServerURLs = await new AbstractImage({
-        id: this.image.baseImage,
-      }).fetchImageServers();
-    },
     setInitialZoom() {
       let zoom = 1;
       let { width } = this.image;
       const { clientWidth } = this.$refs.container;
       while (width > clientWidth) {
-        zoom += (clientWidth / width) * 1.75;
+        zoom += (clientWidth / width) * 2;
         width -= clientWidth;
       }
       this.zoom = zoom;
     },
     setImageCenter() {
-      const { width, height } = this.image;
-      this.center = [(width / height) / 5, (width / height) / 5];
+      this.center = [0.35, 0.16];
     },
   },
   async created() {
-    await this.fetchImageServerURLs();
-    this.setInitialZoom();
     this.setImageCenter();
+  },
+  mounted() {
+    this.setInitialZoom();
   },
 };
 </script>
@@ -89,8 +96,7 @@ export default {
 
 .container {
   display: grid;
-  box-shadow: 0 5px 25px -3px rgba(0,0,0, 0.25);
-  background: white;
+  background: $background-color;
   grid-template-columns: 1fr;
   grid-gap: 10px;
   border-radius: 30px;
@@ -100,30 +106,27 @@ export default {
 
   > .container__viewer {
     min-height: 40rem;
-    box-shadow: 0 0 10px -5px rgba(0,0,0, 0.25);
     border-radius: 30px;
-    overflow: hidden;
+    box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
     width: 100%;
+    overflow: hidden;
     height: 100%;
   }
-   > .container__button {
-     background: $primary-color;
-     font-family: 'Comfortaa', sans-serif;
-     max-height: 5rem;
-     max-width: 400px;
-     width: 100%;
-     margin: auto;
-     min-height: 60px;
-     font-size: 24px;
-     font-weight: 100;
-     border-radius: 50px;
-     border: none;
-     color: white;
+  > .container__button {
+    max-height: 5rem;
+    max-width: 400px;
+    box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
+    width: 100%;
+    margin: 1rem auto auto;
+    min-height: 60px;
+    font-size: 24px;
+    color: $primary-color;
+  }
 
-     &:hover {
-       background: lighten($primary-color, 5);
-       cursor: pointer;
-     }
-   }
+  > .chosen {
+    box-shadow: inset 8px 8px 16px #8c6ecb, inset -8px -8px 16px #be94ff;
+    background: $primary-color;
+    color: white;
+  }
 }
 </style>
