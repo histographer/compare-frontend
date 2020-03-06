@@ -2,7 +2,7 @@
   <div>
     <h1>Fortell oss litt om deg selv!</h1>
     <div class="container">
-      <h3>Skjerm</h3>
+      <h3><i class="bx bx-desktop" />Skjerm</h3>
       <p>
         Vi ønsker å vite hvilken type skjerm du bruker for å bedre kunne forstå hvordan det påvirker
         valgene du gjør.
@@ -25,7 +25,7 @@
       </div>
     </div>
     <div class="container">
-      <h3>Institusjon</h3>
+      <h3><i class="bx bx-home-alt" />Institusjon</h3>
       <p>
         Vi ønsker å vite hvilken institusjon du tilhører for å forstå hvordan de forskjellige institusjonene velger. Merk at du ikke vil bli satt opp som representant for institusjonen din.
       </p>
@@ -33,7 +33,7 @@
         <vs-input class="location__input" v-model="location" state="#f7f3ff" label-placeholder="Eks. St. Olavs Hospital" style="font-size: 24px" />
       </div>
     </div>
-    <vs-button class="continue-button" size="xl" color="#A581EF" transparent @click="handleClick">Fortsett</vs-button>
+    <vs-button class="continue-button" size="xl" color="#A581EF" transparent @click="handleClick">Fortsett <i class="bx bx-caret-right"/></vs-button>
   </div>
 </template>
 
@@ -85,6 +85,10 @@ p {
 h3 {
   font-size: 22px;
   font-weight: 300;
+
+  > i {
+    margin-right: 4px;
+  }
 }
 
 .container {

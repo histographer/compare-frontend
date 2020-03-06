@@ -15,7 +15,7 @@
       v-if="chosenImage !== null"
       floating
       circle
-      color="#f7f3ff"
+      color="#72eaa4"
       size="xl"
       class="nextButton"
       @click="sendChoosen"
@@ -48,34 +48,38 @@ export default {
       this.chosenImage = newId;
     },
     async sendChoosen() {
-      const looserId = this.images.find(image => image.id !== this.chosenImage).id;
-      const data = {
-        chosen: {
-          id: this.chosenImage,
-        },
-        other: {
-          id: looserId,
-        },
-      };
-      await postData(`${this.$store.state.baseUrl}/scoring`, data);
       const loading = this.$vs.loading({
         type: 'corners',
-        color: '#f7f3ff',
+        background: '#f7f3ff',
+        color: '#A581EF',
         opacity: 1,
       });
-      this.images = await this.fetchImages();
-      this.chosenImage = null;
-      setTimeout(() => loading.close(), 700); // Added delay for user friendliness
+      setTimeout(async () => {
+        const looserId = this.images.find(image => image.id !== this.chosenImage).id;
+        const data = {
+          chosen: {
+            id: this.chosenImage,
+          },
+          other: {
+            id: looserId,
+          },
+        };
+        await postData(`${this.$store.state.baseUrl}/scoring`, data);
+        this.images = await this.fetchImages();
+        this.chosenImage = null;
+        loading.close();
+      }, 1000);
     },
   },
   async created() {
     const loading = this.$vs.loading({
       type: 'corners',
-      color: '#f7f3ff',
+      background: '#f7f3ff',
+      color: '#A581EF',
       opacity: 1,
     });
     this.images = await this.fetchImages();
-    setTimeout(() => loading.close(), 700); // Added delay for user friendliness
+    setTimeout(() => loading.close(), 1000);
   },
 };
 </script>

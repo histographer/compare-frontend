@@ -11,7 +11,7 @@
       <vl-layer-tile :extent="extent" ref="baseLayer">
         <vl-source-zoomify
           :projection="projectionName"
-          :urls="imageServerURLs"
+          :urls="baseLayerURLs"
           :size="imageSize"
           :extent="extent"
           crossOrigin="Anonymous"
@@ -62,6 +62,10 @@ export default {
     imageServerURLs() {
       return this.image.imageServerURLs;
     },
+    baseLayerURLs() {
+      const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
+      return this.imageServerURLs.map(url => url + params);
+    },
   },
   methods: {
     setInitialZoom() {
@@ -69,19 +73,20 @@ export default {
       let { width } = this.image;
       const { clientWidth } = this.$refs.container;
       while (width > clientWidth) {
-        zoom += (clientWidth / width) * 1.75;
+        zoom += (clientWidth / width) * 2;
         width -= clientWidth;
       }
       this.zoom = zoom;
     },
     setImageCenter() {
-      const { width, height } = this.image;
-      this.center = [width / height / 5, width / height / 5];
+      this.center = [0.35, 0.16];
     },
   },
   async created() {
-    this.setInitialZoom();
     this.setImageCenter();
+  },
+  mounted() {
+    this.setInitialZoom();
   },
 };
 </script>
@@ -112,14 +117,16 @@ export default {
     max-width: 400px;
     box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
     width: 100%;
-    color: #969696;
     margin: 1rem auto auto;
     min-height: 60px;
     font-size: 24px;
+    color: $primary-color;
   }
 
   > .chosen {
-    box-shadow: inset 7px 7px 14px #e1dde8, inset -7px -7px 14px #ffffff;
+    box-shadow: inset 8px 8px 16px #8c6ecb, inset -8px -8px 16px #be94ff;
+    background: $primary-color;
+    color: white;
   }
 }
 </style>
