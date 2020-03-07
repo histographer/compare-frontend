@@ -9,18 +9,11 @@
       </p>
       <div class="screen">
         <vs-select placeholder="Velg skjerm-type" color="#A581EF" v-model="screen">
-          <vs-option label="Medisinsk" value="medical_grade">
-            Medisinsk
-          </vs-option>
-          <vs-option label="Profesjonell" value="professional_grade">
-            Profesjonell
-          </vs-option>
-          <vs-option label="Vanlig" value="normal_grade">
-            Vanlig
-          </vs-option>
-          <vs-option label="Mobil" value="mobile_grade">
-            Mobil
-          </vs-option>
+          <template v-for="screenType in screenTypes">
+            <vs-option :key="screenType.value" :label="screenType.label" :value="screenType.value">
+              {{ screenType.label }}
+            </vs-option>
+          </template>
         </vs-select>
       </div>
     </div>
@@ -30,7 +23,13 @@
         Vi ønsker å vite hvilken institusjon du tilhører for å forstå hvordan de forskjellige institusjonene velger. Merk at du ikke vil bli satt opp som representant for institusjonen din.
       </p>
       <div class="location">
-        <vs-input autocomplete="off" class="location__input" v-model="location" state="#f7f3ff" label-placeholder="Eks. St. Olavs Hospital" style="font-size: 24px" />
+        <vs-select filter placeholder="Velg institusjon" color="#A581EF" v-model="location">
+          <template v-for="institution in institutions">
+            <vs-option :key="institution.value" :label="institution.label" :value="institution.value">
+              {{ institution.label }}
+            </vs-option>
+          </template>
+        </vs-select>
       </div>
     </div>
     <vs-button class="continue-button" size="xl" color="#A581EF" transparent @click="handleClick">Fortsett <i class="bx bx-caret-right"/></vs-button>
@@ -46,6 +45,94 @@ export default {
     return {
       screen: '',
       location: '',
+      screenTypes: [
+        {
+          label: 'Medisinsk',
+          value: 'medical_grade',
+        },
+        {
+          label: 'Profesjonell',
+          value: 'professional_grade',
+        },
+        {
+          label: 'Vanlig',
+          value: 'normal_grade',
+        },
+        {
+          label: 'Mobil',
+          value: 'mobile_grade',
+        },
+      ],
+      institutions: [
+        {
+          label: 'Sykehuset Østfold',
+          value: 'fredrikstad',
+        },
+        {
+          label: 'Akershus universitetssykehus',
+          value: 'ahus',
+        },
+        {
+          label: 'Oslo universitetssykehus',
+          value: 'oslo',
+        },
+        {
+          label: 'Sykehuset Innlandet',
+          value: 'lillehammer',
+        },
+        {
+          label: 'Vestre Viken',
+          value: 'drammen',
+        },
+        {
+          label: 'Sykehuset i Vestfold',
+          value: 'toensberg',
+        },
+        {
+          label: 'Sykehuset Telemark',
+          value: 'skien',
+        },
+        {
+          label: 'Sørlandet Sykehus',
+          value: 'kristiansand',
+        },
+        {
+          label: 'Stavanger universitetssjukehus',
+          value: 'stavanger',
+        },
+        {
+          label: 'Haukeland universitetssjukehus',
+          value: 'bergen',
+        },
+        {
+          label: 'Førde sentrasjukehus',
+          value: 'foerde',
+        },
+        {
+          label: 'Haugesund sjukehus',
+          value: 'haugesund',
+        },
+        {
+          label: 'Helse Sunnmøre',
+          value: 'aalesund',
+        },
+        {
+          label: 'Helse Nordmøre og Romsdal',
+          value: 'molde',
+        },
+        {
+          label: 'St. Olavs hospital',
+          value: 'trondheim',
+        },
+        {
+          label: 'Nordlandssykehuset',
+          value: 'bodoe',
+        },
+        {
+          label: 'Universitetssykehuset Nord-Norge',
+          value: 'tromsoe',
+        },
+      ],
     };
   },
   methods: {
@@ -175,8 +262,12 @@ h3 {
   height: 40px;
 }
 
-.vs-select__option {
+button.vs-select__option {
   font-size: 1.2rem;
+  padding: 10px;
+}
+
+.vs-select__options__content__not-data {
   padding: 10px !important;
 }
 
