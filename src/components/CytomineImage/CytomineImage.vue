@@ -19,13 +19,13 @@
         />
       </vl-layer-tile>
     </vl-map>
-    <vs-button v-if="chosen" relief circle class="container__button chosen" active color="#f7f3ff">
+    <vs-button v-if="chosen" relief circle class="container__button chosen" active color="#b395f3">
       Valgt <i class="bx bx-check" />
     </vs-button>
     <vs-button
       v-else
       circle
-      color="#f7f3ff"
+      color="#b395f3"
       class="container__button"
       @click="$emit('chooseImage', image.id)"
     >
@@ -120,13 +120,11 @@ export default {
     margin: 1rem auto auto;
     min-height: 60px;
     font-size: 24px;
-    color: $primary-color;
   }
 
   > .chosen {
-    box-shadow: inset 8px 8px 16px #8c6ecb, inset -8px -8px 16px #be94ff;
+    box-shadow: inset 7px 7px 14px #8c6ecb, inset -7px -7px 14px #be94ff;
     background: $primary-color;
-    color: white;
   }
 }
 </style>
