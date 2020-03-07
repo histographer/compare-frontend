@@ -23,7 +23,7 @@
         Vi ønsker å vite hvilken institusjon du tilhører for å forstå hvordan de forskjellige institusjonene velger. Merk at du ikke vil bli satt opp som representant for institusjonen din.
       </p>
       <div class="location">
-        <vs-select filter placeholder="Velg institusjon" color="#A581EF" v-model="location">
+        <vs-select filter placeholder="Velg institusjon" color="#b395f3" v-model="location">
           <template v-for="institution in institutions">
             <vs-option :key="institution.value" :label="institution.label" :value="institution.value">
               {{ institution.label }}
@@ -32,7 +32,7 @@
         </vs-select>
       </div>
     </div>
-    <vs-button class="continue-button" size="xl" color="#A581EF" transparent @click="handleClick">Fortsett <i class="bx bx-caret-right"/></vs-button>
+    <vs-button class="continue-button" size="xl" color="#b395f3" transparent @click="handleClick">Fortsett <i class="bx bx-caret-right"/></vs-button>
   </div>
 </template>
 
