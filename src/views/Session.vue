@@ -65,72 +65,84 @@ export default {
       ],
       institutions: [
         {
-          label: 'Sykehuset Østfold',
-          value: 'fredrikstad',
+          label: 'Tromsø, T',
+          value: 'tromsoe',
         },
         {
-          label: 'Akershus universitetssykehus',
-          value: 'ahus',
-        },
-        {
-          label: 'Oslo universitetssykehus',
-          value: 'oslo',
-        },
-        {
-          label: 'Sykehuset Innlandet',
-          value: 'lillehammer',
-        },
-        {
-          label: 'Vestre Viken',
-          value: 'drammen',
-        },
-        {
-          label: 'Sykehuset i Vestfold',
-          value: 'toensberg',
-        },
-        {
-          label: 'Sykehuset Telemark',
-          value: 'skien',
-        },
-        {
-          label: 'Sørlandet Sykehus',
-          value: 'kristiansand',
-        },
-        {
-          label: 'Stavanger universitetssjukehus',
-          value: 'stavanger',
-        },
-        {
-          label: 'Haukeland universitetssjukehus',
-          value: 'bergen',
-        },
-        {
-          label: 'Førde sentrasjukehus',
-          value: 'foerde',
-        },
-        {
-          label: 'Haugesund sjukehus',
-          value: 'haugesund',
-        },
-        {
-          label: 'Helse Sunnmøre',
-          value: 'aalesund',
-        },
-        {
-          label: 'Helse Nordmøre og Romsdal',
-          value: 'molde',
-        },
-        {
-          label: 'St. Olavs hospital',
-          value: 'trondheim',
-        },
-        {
-          label: 'Nordlandssykehuset',
+          label: 'Bodø, B',
           value: 'bodoe',
         },
         {
-          label: 'Universitetssykehuset Nord-Norge',
-          value: 'tromsoe',
+          label: 'St Olav, S',
+          value: 'st_olav',
+        },
+        {
+          label: 'Molde, M',
+          value: 'molde',
+        },
+        {
+          label: 'Ålesund, A',
+          value: 'aalesund',
+        },
+        {
+          label: 'Førde, HFD',
+          value: 'foerde',
+        },
+        {
+          label: 'Bergen, HUS',
+          value: 'bergen',
+        },
+        {
+          label: 'Haugesund, HFO',
+          value: 'haugesund',
+        },
+        {
+          label: 'Stavanger, HST',
+          value: 'stavanger',
+        },
+        {
+          label: 'Kristiansand, KR',
+          value: 'kristiansand',
+        },
+        {
+          label: 'Tønsberg, TO',
+          value: 'toensberg',
+        },
+        {
+          label: 'Skien, SK',
+          value: 'skien',
+        },
+        {
+          label: 'Drammen, DR',
+          value: 'drammen',
+        },
+        {
+          label: 'Radiumhospitalet, RA',
+          value: 'montebello',
+        },
+        {
+          label: 'Rikshospitalet, RH',
+          value: 'gaustad',
+        },
+        {
+          label: 'Ullevaal, UL',
+          value: 'ullevaal',
+        },
+        {
+          label: 'AHUS Nordbyhagen, NH',
+          value: 'ahus',
+        },
+        {
+          label: 'Kalnes (SØHF), Ka',
+          value: 'kalnes',
+        },
+        {
+          label: 'Lillehammer, LI',
+          value: 'lillehammer',
+        },
+        {
+          label: 'Andre',
+          value: 'andre',
         },
       ],
     };

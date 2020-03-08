@@ -1,24 +1,33 @@
 <template>
   <div class="container" ref="container">
-    <vl-map
-      :load-tiles-while-animating="true"
-      :load-tiles-while-interacting="true"
-      data-projection="EPSG:4326"
-      class="container__viewer"
-    >
-      <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+    <div class="container__image">
+      <vl-map
+        :load-tiles-while-animating="true"
+        :load-tiles-while-interacting="true"
+        data-projection="EPSG:4326"
+        class="container__viewer"
+        ref="map"
+      >
+        <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
 
-      <vl-layer-tile :extent="extent" ref="baseLayer">
-        <vl-source-zoomify
-          :projection="projectionName"
-          :urls="baseLayerURLs"
-          :size="imageSize"
-          :extent="extent"
-          crossOrigin="Anonymous"
-          ref="baseSource"
-        />
-      </vl-layer-tile>
-    </vl-map>
+        <vl-layer-tile :extent="extent" @mounted="addOverviewMap" ref="baseLayer">
+          <vl-source-zoomify
+            :projection="projectionName"
+            :urls="baseLayerURLs"
+            :size="imageSize"
+            :extent="extent"
+            crossOrigin="Anonymous"
+            ref="baseSource"
+          />
+        </vl-layer-tile>
+      </vl-map>
+      <div class="panels">
+        <scale-line :image="image" :zoom="zoom" />
+
+        <div class="custom-overview" ref="overview">
+        </div>
+      </div>
+    </div>
     <vs-button v-if="chosen" relief circle class="container__button chosen" active color="#b395f3">
       Valgt <i class="bx bx-check" />
     </vs-button>
@@ -35,8 +44,16 @@
 </template>
 
 <script>
+import View from 'ol/View';
+import OverviewMap from 'ol/control/OverviewMap';
+
+import ScaleLine from './ScaleLine.vue';
+
 export default {
   name: 'CytomineImage',
+  components: {
+    ScaleLine,
+  },
   props: {
     image: Object,
     chosen: Boolean,
@@ -80,6 +97,17 @@ export default {
     },
     setImageCenter() {
       this.center = [0.35, 0.16];
+    },
+    async addOverviewMap() {
+      await this.$refs.map.$createPromise; // wait for ol.Map to be created
+      await this.$refs.baseLayer.$createPromise; // wait for ol.Layer to be created
+
+      this.overview = new OverviewMap({
+        view: new View({ projection: this.projectionName }),
+        layers: [this.$refs.baseLayer.$layer],
+        target: this.$refs.overview,
+      });
+      this.$refs.map.$map.addControl(this.overview);
     },
   },
   async created() {
