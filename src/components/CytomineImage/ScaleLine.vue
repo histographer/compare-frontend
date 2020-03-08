@@ -1,11 +1,11 @@
 <template>
-  <div class="scale-line" :class="{'interpolation': interpolation}">
+  <div class="scale-line">
     <div class="scale-line-top" :style="{width: scaleLineLength + 'px'}">
       {{scaleLength}}
     </div>
     <div class="scale-line-bottom">
     <span v-show="magnification">
-      Magnification: {{magnification}}X
+      Forstørrelse: {{magnification}}X
     </span>
     </div>
   </div>
@@ -17,6 +17,7 @@ export default {
   props: {
     image: Object,
     zoom: Number,
+    clientWidth: Number,
   },
   data() {
     return {
@@ -25,15 +26,17 @@ export default {
   },
   computed: {
     magnification() {
-      const magnification = (2 ** (this.zoom - this.image.depth)) * this.image.magnification;
-      return Math.round(magnification * 100) / 100;
+      const magnification = (2 ** (this.zoom - this.image.depth)) * this.image.magnification / this.clientWidth * 2;
+      return Math.round((Math.round(magnification * 10) / 10) * 2) / 2;
     },
     resolution() {
       const resolution = this.image.resolution ? this.image.resolution : 1;
       return (2 ** (this.image.depth - this.zoom)) * resolution;
     },
     scaleLength() {
-      let length = this.scaleLineLength * this.resolution;
+      let length = (this.scaleLineLength * this.clientWidth / 2) * this.resolution;
+      // This is to offset the margin on the sides of each viewer
+      length -= 25;
       if (this.image.resolution) {
         let unit = 'µm';
         if (length > 1000) {
@@ -53,12 +56,11 @@ export default {
 
 <style scoped>
   .scale-line {
-    background: white;
-    position: absolute;
+    background-color: rgba(255, 255, 255, .4);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
     padding: 0.4em 0.8em;
-    display: block;
-    right: 4rem;
-    bottom: 1rem;
+    display: inline-block;
     font-size: 9px;
     min-width: 100px;
   }
@@ -77,13 +79,7 @@ export default {
     border-bottom: none;
     text-align: center;
     padding-top: 0.2em;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
     min-height: 1em;
-  }
-  .interpolation {
-    color: red;
-  }
-  .interpolation .scale-line-top, .interpolation .scale-line-bottom {
-    border-color: red;
   }
 </style>

@@ -1,14 +1,14 @@
 <template>
   <div class="container" ref="container">
-    <div class="container__image">
+    <div class="container__viewer">
       <vl-map
         :load-tiles-while-animating="true"
         :load-tiles-while-interacting="true"
         data-projection="EPSG:4326"
-        class="container__viewer"
+        class="container__viewer__image"
         ref="map"
       >
-        <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation"></vl-view>
+        <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation" :max-zoom="maxZoom"></vl-view>
 
         <vl-layer-tile :extent="extent" @mounted="addOverviewMap" ref="baseLayer">
           <vl-source-zoomify
@@ -21,11 +21,11 @@
           />
         </vl-layer-tile>
       </vl-map>
-      <div class="panels">
-        <scale-line :image="image" :zoom="zoom" />
+    </div>
+    <div class="container__panels">
+      <scale-line :image="image" :zoom="zoom" :client-width="clientWidth"/>
 
-        <div class="custom-overview" ref="overview">
-        </div>
+      <div class="custom-overview" ref="overview">
       </div>
     </div>
     <vs-button v-if="chosen" relief circle class="container__button chosen" active color="#b395f3">
@@ -64,6 +64,7 @@ export default {
       center: [0, 0],
       rotation: 0,
       baseSource: null,
+      clientWidth: null,
     };
   },
   computed: {
@@ -83,12 +84,16 @@ export default {
       const params = `&tileGroup={TileGroup}&x={x}&y={y}&z={z}&channels=0&layer=0&timeframe=0&mimeType=${this.image.mime}`;
       return this.imageServerURLs.map(url => url + params);
     },
+    maxZoom() {
+      return (this.image.depth * 2) - 2;
+    },
   },
   methods: {
     setInitialZoom() {
       let zoom = 1;
       let { width } = this.image;
       const { clientWidth } = this.$refs.container;
+      this.clientWidth = clientWidth; // Used to send to ScaleLine component
       while (width > clientWidth) {
         zoom += (clientWidth / width) * 2;
         width -= clientWidth;
@@ -126,20 +131,30 @@ export default {
   display: grid;
   background: $background-color;
   grid-template-columns: 1fr;
-  grid-gap: 10px;
   border-radius: 30px;
   margin: auto;
   padding: 25px 15px;
   width: calc(100% - 30px);
 
   > .container__viewer {
-    min-height: 40rem;
-    border-radius: 30px;
-    box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
-    width: 100%;
-    overflow: hidden;
-    height: 100%;
+
+    > .container__viewer__image {
+      min-height: 40rem;
+      border-radius: 30px;
+      box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
+      width: 100%;
+      overflow: hidden;
+      height: 100%;
+    }
   }
+
+  > .container__panels {
+    margin-top: -4rem;
+    z-index: 1;
+    text-align: right;
+    margin-right: 1rem;
+  }
+
   > .container__button {
     max-height: 5rem;
     max-width: 400px;
