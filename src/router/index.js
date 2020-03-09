@@ -3,6 +3,8 @@ import VueRouter from 'vue-router';
 import Home from '../views/Home.vue';
 import Session from '../views/Session.vue';
 import NotFound from '../views/NotFound.vue';
+import ThankYou from '../views/ThankYou.vue';
+import Ranking from '../views/Ranking.vue';
 
 Vue.use(VueRouter);
 
@@ -16,6 +18,16 @@ const routes = [
     path: '/session',
     name: 'session',
     component: Session,
+  },
+  {
+    path: '/thank-you',
+    name: 'thank-you',
+    component: ThankYou,
+  },
+  {
+    path: '/ranking',
+    name: 'ranking',
+    component: Ranking,
   },
   {
     path: '*',

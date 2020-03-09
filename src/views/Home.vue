@@ -22,6 +22,9 @@
     >
       Neste<i class="bx bx-caret-right" />
     </vs-button>
+    <vs-button transparent size="xl" color="#313131" class="exitButton" to="/thank-you">
+      Logg ut
+    </vs-button>
   </div>
 </template>
 
@@ -52,23 +55,23 @@ export default {
         type: 'corners',
         background: '#f7f3ff',
         color: '#A581EF',
-        opacity: 1,
+        opacity: 0.7,
       });
-      setTimeout(async () => {
-        const looserId = this.images.find(image => image.id !== this.chosenImage).id;
-        const data = {
-          chosen: {
-            id: this.chosenImage,
-          },
-          other: {
-            id: looserId,
-          },
-        };
-        await postData(`${this.$store.state.baseUrl}/scoring`, data);
-        this.images = await this.fetchImages();
-        this.chosenImage = null;
-        loading.close();
-      }, 1000);
+      const looserId = this.images.find(image => image.id !== this.chosenImage).id;
+      const data = {
+        chosen: {
+          id: this.chosenImage,
+        },
+        other: {
+          id: looserId,
+        },
+      };
+      await postData(`${this.$store.state.baseUrl}/scoring`, data);
+      this.images = await this.fetchImages();
+      this.chosenImage = null;
+      // Added for more delay to better the user experience
+      await new Promise(resolve => setTimeout(resolve, 500));
+      loading.close();
     },
   },
   async created() {
@@ -79,7 +82,7 @@ export default {
       opacity: 1,
     });
     this.images = await this.fetchImages();
-    setTimeout(() => loading.close(), 1000);
+    setTimeout(() => loading.close(), 500);
   },
 };
 </script>
@@ -108,5 +111,11 @@ h1 {
   &:hover {
     box-shadow: none;
   }
+}
+
+.exitButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 </style>
