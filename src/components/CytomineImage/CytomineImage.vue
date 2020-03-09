@@ -65,6 +65,7 @@ export default {
       rotation: 0,
       baseSource: null,
       clientWidth: null,
+      overview: null,
     };
   },
   computed: {
@@ -95,31 +96,34 @@ export default {
       const { clientWidth } = this.$refs.container;
       this.clientWidth = clientWidth; // Used to send to ScaleLine component
       while (width > clientWidth) {
-        zoom += (clientWidth / width) * 2;
+        zoom += (clientWidth / width) * 2.1;
         width -= clientWidth;
       }
       this.zoom = zoom;
     },
     setImageCenter() {
-      this.center = [0.35, 0.16];
+      const { clientWidth, clientHeight } = this.$refs.container;
+      this.center = [clientWidth / clientHeight / 2.4, clientHeight / clientWidth / 3.4];
     },
     async addOverviewMap() {
       await this.$refs.map.$createPromise; // wait for ol.Map to be created
       await this.$refs.baseLayer.$createPromise; // wait for ol.Layer to be created
 
       this.overview = new OverviewMap({
-        view: new View({ projection: this.projectionName }),
+        view: new View({
+          projection: 'EPSG:4326', minZoom: -9,
+        }),
         layers: [this.$refs.baseLayer.$layer],
+        tipLabel: 'overview map',
         target: this.$refs.overview,
+        collapsible: false,
       });
       this.$refs.map.$map.addControl(this.overview);
     },
   },
-  async created() {
-    this.setImageCenter();
-  },
   mounted() {
     this.setInitialZoom();
+    this.setImageCenter();
   },
 };
 </script>
@@ -153,6 +157,12 @@ export default {
     z-index: 1;
     text-align: right;
     margin-right: 1rem;
+
+    > .custom-overview {
+      position: relative;
+      left: 1rem;
+
+    }
   }
 
   > .container__button {
@@ -170,4 +180,17 @@ export default {
     background: $primary-color;
   }
 }
+</style>
+
+<style lang="scss">
+  .custom-overview {
+    > .ol-overviewmap:not(.ol-collapsed) {
+      backdrop-filter: blur(5px);
+      background: rgba(255, 255, 255, .4);
+      border-radius: 10px;
+    }
+    > .ol-overviewmap .ol-overviewmap-map {
+      border: none;
+    }
+  }
 </style>
