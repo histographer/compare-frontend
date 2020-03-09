@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <span class="name">{{ name }}</span>
+      <span class="name">{{ id }}</span>
       <span class="score">{{ score }}</span>
       <span class="rankings">{{ rankings }}</span>
     </div>
@@ -10,7 +10,7 @@
 export default {
   name: 'RankEntry',
   props: {
-    name: String,
+    id: Number,
     score: Number,
     rankings: Number,
   },
