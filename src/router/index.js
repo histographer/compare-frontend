@@ -5,8 +5,10 @@ import Session from '../views/Session.vue';
 import NotFound from '../views/NotFound.vue';
 import ThankYou from '../views/ThankYou.vue';
 import Ranking from '../views/Ranking.vue';
+import { getData } from '../utils/requests';
 
 Vue.use(VueRouter);
+
 
 const routes = [
   {
@@ -43,9 +45,18 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isLoggedIn = window.localStorage.getItem('isLoggedIn');
-  if (to.name !== 'session' && isLoggedIn === null) next({ name: 'session' });
+  const isLoggedIn = checkSession();
+  if (to.name !== 'session' && !isLoggedIn) next({ name: 'session' });
   else next();
 });
 
+async function checkSession() {
+  let success = true;
+  try {
+    await getData('compare-api.digipat.no/imagePair');
+  } catch (e) {
+    success = true;
+  }
+  return success;
+}
 export default router;
