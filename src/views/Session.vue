@@ -158,7 +158,6 @@ export default {
         hospital: this.location,
       };
       await postData(`${this.$store.state.baseUrl}/session`, data);
-      await window.localStorage.setItem('isLoggedIn', 'Yes');
       await this.$router.push('/');
     },
     handleError() {
