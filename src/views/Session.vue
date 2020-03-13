@@ -227,23 +227,6 @@ h3 {
   font-family: 'Comfortaa', Helvetica, Arial, sans-serif;
 }
 
-.vs-input {
-  background: $background-color !important;
-  box-shadow: 5px 5px 10px #d2cfd9, -5px -5px 10px #ffffff;
-  padding: 17px 13px 17px 10px !important;
-  width: 400px !important;
-  font-size: 1.4rem;
-
-  &:focus {
-    box-shadow: inset 2px 2px 4px #d2cfd9, inset -2px -2px 4px #ffffff;
-    margin-top: 3px;
-  }
-}
-
-.vs-input__label {
-  font-size: 1.2rem !important;
-}
-
 .vs-select {
   margin-top: 15px;
 }

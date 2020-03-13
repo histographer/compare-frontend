@@ -5,6 +5,7 @@ import Session from '../views/Session.vue';
 import NotFound from '../views/NotFound.vue';
 import ThankYou from '../views/ThankYou.vue';
 import Ranking from '../views/Ranking.vue';
+import AddProject from '../views/AddProject.vue';
 import { getData } from '../utils/requests';
 
 Vue.use(VueRouter);
@@ -30,6 +31,11 @@ const routes = [
     path: '/ranking',
     name: 'ranking',
     component: Ranking,
+  },
+  {
+    path: '/addProject',
+    name: 'addProject',
+    component: AddProject,
   },
   {
     path: '*',
