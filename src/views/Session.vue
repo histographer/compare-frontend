@@ -32,7 +32,7 @@
         </vs-select>
       </div>
     </div>
-    <vs-button class="continue-button" size="xl" color="#b395f3" transparent @click="handleClick">Fortsett <i class="bx bx-caret-right"/></vs-button>
+    <vs-button class="continue-button" size="xl" color="#b395f3" transparent @click="handleClick">Fortsett <i class="bx bx-chevron-right"/></vs-button>
   </div>
 </template>
 

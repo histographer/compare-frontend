@@ -23,10 +23,10 @@
       Neste<i class="bx bx-caret-right" />
     </vs-button>
     <vs-button transparent size="xl" color="#313131" class="exitButton" to="/thank-you">
-      Logg ut
+      Logg ut<i class="bx bx-log-out"/>
     </vs-button>
     <vs-button transparent size="xl" color="#313131" class="changeProjectButton" to="/choose-project">
-      Bytt prosjekt
+      <i class="bx bx-list-ul" style="margin-right: 5px;"/>Bytt prosjekt
     </vs-button>
   </div>
 </template>
