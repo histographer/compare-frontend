@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <h1>Hvilket av snittene ser best ut?</h1>
     <div class="images">
       <template v-for="image in images">
@@ -24,6 +24,9 @@
     </vs-button>
     <vs-button transparent size="xl" color="#313131" class="exitButton" to="/thank-you">
       Logg ut
+    </vs-button>
+    <vs-button transparent size="xl" color="#313131" class="changeProjectButton" to="/choose-project">
+      Bytt prosjekt
     </vs-button>
   </div>
 </template>
@@ -74,6 +77,12 @@ export default {
       loading.close();
     },
   },
+  beforeCreate() {
+    const localStorageProject = JSON.parse(localStorage.getItem('currentProject'));
+    const globalStateProject = this.$store.state.currentProject;
+    if (globalStateProject === null && localStorageProject === null) this.$router.push('/choose-project');
+    else if (globalStateProject === null && localStorageProject !== null) this.$store.commit('setCurrentProject', localStorageProject);
+  },
   async created() {
     const loading = this.$vs.loading({
       type: 'corners',
@@ -88,13 +97,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
+body {
+  overflow-y: hidden;
+}
+
+.content {
+  display: flex;
+  height: 100%;
+  flex-flow: column;
+}
 .images {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
   justify-items: stretch;
-  align-content: center;
-  min-height: 100%;
+  height: calc(80% - 30px);
 }
 h1 {
   color: black;
@@ -117,5 +134,12 @@ h1 {
   position: absolute;
   top: 10px;
   right: 10px;
+}
+
+
+.changeProjectButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 </style>

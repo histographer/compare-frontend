@@ -8,7 +8,7 @@
         valgene du gjør.
       </p>
       <div class="screen">
-        <vs-select placeholder="Velg skjerm-type" color="#A581EF" v-model="screen">
+        <vs-select placeholder="Velg skjerm-type" color="#b395f3" v-model="screen">
           <template v-for="screenType in screenTypes">
             <vs-option :key="screenType.value" :label="screenType.label" :value="screenType.value">
               {{ screenType.label }}
@@ -158,7 +158,7 @@ export default {
         hospital: this.location,
       };
       await postData(`${this.$store.state.baseUrl}/session`, data);
-      await this.$router.push('/');
+      await this.$router.push('/choose-project');
     },
     handleError() {
       this.$vs.notification({
@@ -201,11 +201,6 @@ h3 {
   display: inline-blocK;
   font-size: 24px;
   margin-top: 10px;
-
-  > .vs-radio-content {
-    justify-content: flex-start;
-    margin: 15px 0;
-  }
 }
 
 .location {

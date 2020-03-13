@@ -4,11 +4,11 @@
       <vl-map
         :load-tiles-while-animating="true"
         :load-tiles-while-interacting="true"
-        data-projection="EPSG:4326"
+        data-projection="EPSG:3857"
         class="container__viewer__image"
         ref="map"
       >
-        <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation" :max-zoom="maxZoom"></vl-view>
+        <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation" :max-zoom="maxZoom" :min-zoom="minZoom"></vl-view>
 
         <vl-layer-tile :extent="extent" @mounted="addOverviewMap" ref="baseLayer">
           <vl-source-zoomify
@@ -61,6 +61,7 @@ export default {
   data() {
     return {
       zoom: null,
+      minZoom: null,
       center: [0, 0],
       rotation: 0,
       baseSource: null,
@@ -73,7 +74,7 @@ export default {
       return `CYTO-${this.image.id}`;
     },
     extent() {
-      return [0, 0, this.image.width, this.image.height];
+      return [0, -this.image.height, this.image.width, 0];
     },
     imageSize() {
       return [this.image.width, this.image.height];
@@ -91,19 +92,11 @@ export default {
   },
   methods: {
     setInitialZoom() {
-      let zoom = 1;
-      let { width } = this.image;
-      const { clientWidth } = this.$refs.container;
-      this.clientWidth = clientWidth; // Used to send to ScaleLine component
-      while (width > clientWidth) {
-        zoom += (clientWidth / width) * 2.1;
-        width -= clientWidth;
-      }
-      this.zoom = zoom;
+      this.zoom = 9.25;
+      this.minZoom = 9.25;
     },
     setImageCenter() {
-      const { clientWidth, clientHeight } = this.$refs.container;
-      this.center = [clientWidth / clientHeight / 2.4, clientHeight / clientWidth / 3.4];
+      this.center = [this.image.height / 1.25, -this.image.height / 2];
     },
     async addOverviewMap() {
       await this.$refs.map.$createPromise; // wait for ol.Map to be created
@@ -124,6 +117,8 @@ export default {
   mounted() {
     this.setInitialZoom();
     this.setImageCenter();
+    const { clientWidth } = this.$refs.container;
+    this.clientWidth = clientWidth; // Used to send to ScaleLine component
   },
 };
 </script>
@@ -132,18 +127,19 @@ export default {
 @import "../../style/colors.scss";
 
 .container {
-  display: grid;
+  display: flex;
   background: $background-color;
-  grid-template-columns: 1fr;
+  height: 100%;
+  flex-flow: column;
   border-radius: 30px;
   margin: auto;
-  padding: 25px 15px;
-  width: calc(100% - 30px);
+  width: calc(100% - 5vh);
 
   > .container__viewer {
+    display: flex;
+    height: calc(100% - 5rem);
 
     > .container__viewer__image {
-      min-height: 40rem;
       border-radius: 30px;
       box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
       width: 100%;
@@ -170,7 +166,7 @@ export default {
     max-width: 400px;
     box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
     width: 100%;
-    margin: 1rem auto auto;
+    margin: 3rem auto auto;
     min-height: 60px;
     font-size: 24px;
   }

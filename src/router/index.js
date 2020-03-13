@@ -5,6 +5,7 @@ import Session from '../views/Session.vue';
 import NotFound from '../views/NotFound.vue';
 import ThankYou from '../views/ThankYou.vue';
 import Ranking from '../views/Ranking.vue';
+import ChooseProject from '../views/ChooseProject.vue';
 import { getData } from '../utils/requests';
 
 Vue.use(VueRouter);
@@ -20,11 +21,19 @@ const routes = [
     path: '/session',
     name: 'session',
     component: Session,
+    beforeLeave: (to, from, next) => {
+      next({ name: 'choose-project' });
+    },
   },
   {
     path: '/thank-you',
     name: 'thank-you',
     component: ThankYou,
+  },
+  {
+    path: '/choose-project',
+    name: 'choose-project',
+    component: ChooseProject,
   },
   {
     path: '/ranking',
