@@ -31,17 +31,7 @@ export default {
     },
   },
   async created() {
-    // this.availableProjects = await getData(`${this.$store.state.baseUrl}/get-projects`);
-    this.availableProjects = [
-      {
-        id: 'hjflg',
-        name: 'Howdy',
-      },
-      {
-        id: 'dhafgj1235jisj',
-        name: 'Yeehaw',
-      },
-    ];
+    this.availableProjects = await getData(`${this.$store.state.baseUrl}/project`);
   },
 };
 </script>
