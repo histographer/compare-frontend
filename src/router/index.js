@@ -6,6 +6,10 @@ import NotFound from '../views/NotFound.vue';
 import ThankYou from '../views/ThankYou.vue';
 import Ranking from '../views/Ranking.vue';
 import AddProject from '../views/AddProject.vue';
+import ChooseProject from '../views/ChooseProject.vue';
+
+import store from '../store/index';
+
 import { getData } from '../utils/requests';
 
 Vue.use(VueRouter);
@@ -28,12 +32,17 @@ const routes = [
     component: ThankYou,
   },
   {
+    path: '/choose-project',
+    name: 'choose-project',
+    component: ChooseProject,
+  },
+  {
     path: '/ranking',
     name: 'ranking',
     component: Ranking,
   },
   {
-    path: '/addProject',
+    path: '/add-project',
     name: 'addProject',
     component: AddProject,
   },
@@ -50,19 +59,35 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isLoggedIn = checkSession();
-  if (to.name !== 'session' && !isLoggedIn) next({ name: 'session' });
-  else next();
+router.beforeEach(async (to, from, next) => {
+  const hasProject = await checkCurrentProject(store.state);
+  const hasSession = await checkSession(store.state);
+  if (to.name !== 'choose-project' && !hasProject) {
+    next({ name: 'choose-project' });
+  } else if (to.name !== 'session' && !hasSession) {
+    next({ name: 'session' });
+  } else {
+    next();
+  }
 });
 
-async function checkSession() {
-  let success = true;
-  try {
-    await getData('compare-api.digipat.no/imagePair');
-  } catch (e) {
-    success = true;
-  }
-  return success;
+async function checkSession(state) {
+  const response = await getData(`compare-api.digipat.no/imagePair?projectId=${state.currentProject.id}`);
+  return response.status === 200;
 }
+
+function checkCurrentProject(state) {
+  const fromState = state.currentProject;
+  const fromLocalStorage = JSON.parse(localStorage.getItem('currentProject'));
+  if (Object.keys(fromState).length > 0) {
+    return true;
+  }
+  if (Object.keys(fromState).length === 0 && fromLocalStorage !== null) {
+    // State doesnt have currentProject but localstorage does
+    store.commit('setCurrentProject', fromLocalStorage);
+    return true;
+  }
+  return false;
+}
+
 export default router;

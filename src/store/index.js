@@ -6,10 +6,15 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     baseUrl: null,
+    currentProject: null,
   },
   mutations: {
     changeBaseURL(state, payload) {
       state.baseUrl = payload.newUrl;
+    },
+    setCurrentProject(state, payload) {
+      state.currentProject = payload;
+      localStorage.setItem('currentProject', JSON.stringify(payload));
     },
   },
   actions: {},
