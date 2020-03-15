@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { postData } from '../utils/requests';
+
 export default {
   name: 'addProject',
   data() {
@@ -43,21 +45,17 @@ export default {
     },
   },
   methods: {
-    myFirstPromise() {
-      return new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (Math.random() > 0.5) reject();
-          resolve();
-        }, 1000);
-      });
-    },
     async addProject() {
       this.loading = true;
+      const POST = {
+        projectId: Number(this.addProjectId),
+      };
       try {
-        await this.myFirstPromise();
+        await postData(`${this.$store.state.baseUrl}/project`, POST);
         this.messageColor = 'message-success';
         this.message = 'Prosjektet ble lagt til.';
       } catch (e) {
+        console.error(e);
         this.messageColor = 'message-danger';
         this.message = 'Det oppsto en feil.';
       }

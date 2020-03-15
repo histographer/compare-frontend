@@ -32,7 +32,7 @@
         </vs-select>
       </div>
     </div>
-    <vs-button class="continue-button" size="xl" color="#b395f3" transparent @click="handleClick">Fortsett <i class="bx bx-chevron-right"/></vs-button>
+    <vs-button class="continue-button" size="xl" color="#b395f3" transparent @click="handleClick">Begynn sammenligning <i class="bx bx-chevron-right"/></vs-button>
   </div>
 </template>
 
@@ -154,11 +154,12 @@ export default {
         return;
       }
       const data = {
+        projectId: this.$store.state.currentProject.id,
         monitorType: this.screen,
         hospital: this.location,
       };
       await postData(`${this.$store.state.baseUrl}/session`, data);
-      await this.$router.push('/choose-project');
+      await this.$router.push({ name: 'home' });
     },
     handleError() {
       this.$vs.notification({

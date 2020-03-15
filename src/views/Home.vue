@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     async fetchImages() {
-      return getData(`${this.$store.state.baseUrl}/imagePair`);
+      return getData(`${this.$store.state.baseUrl}/imagePair?projectId=${this.$store.state.currentProject.id}`);
     },
     chooseImage(newId) {
       this.chosenImage = newId;
