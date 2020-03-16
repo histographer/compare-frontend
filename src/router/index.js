@@ -5,9 +5,7 @@ import Session from '../views/Session.vue';
 import NotFound from '../views/NotFound.vue';
 import ThankYou from '../views/ThankYou.vue';
 import Ranking from '../views/Ranking.vue';
-import AddProject from '../views/AddProject.vue';
-import ChooseProject from '../views/ChooseProject.vue';
-
+import AllProjects from '../views/AllProjects.vue';
 import store from '../store/index';
 
 import { getData } from '../utils/requests';
@@ -32,19 +30,14 @@ const routes = [
     component: ThankYou,
   },
   {
-    path: '/choose-project',
-    name: 'choose-project',
-    component: ChooseProject,
-  },
-  {
     path: '/ranking',
     name: 'ranking',
     component: Ranking,
   },
   {
-    path: '/add-project',
-    name: 'addProject',
-    component: AddProject,
+    path: '/all-projects',
+    name: 'all-projects',
+    component: AllProjects,
   },
   {
     path: '*',
@@ -61,9 +54,12 @@ const router = new VueRouter({
 
 router.beforeEach(async (to, from, next) => {
   const hasProject = await checkCurrentProject(store.state);
-  const hasSession = await checkSession(store.state);
-  if (to.name !== 'choose-project' && !hasProject) {
-    next({ name: 'choose-project' });
+  let hasSession = false;
+  if (hasProject) {
+    hasSession = await checkSession(store.state);
+  }
+  if (to.name === 'add-project' || to.name === 'all-projects' || to.name === 'ranking') {
+    next();
   } else if (to.name !== 'session' && !hasSession) {
     next({ name: 'session' });
   } else {
@@ -72,7 +68,7 @@ router.beforeEach(async (to, from, next) => {
 });
 
 async function checkSession(state) {
-  const response = await getData(`compare-api.digipat.no/imagePair?projectId=${state.currentProject.id}`);
+  const response = await getData(`${state.baseUrl}/imagePair?projectId=${state.currentProject.id}`);
   return response.status === 200;
 }
 

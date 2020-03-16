@@ -1,6 +1,6 @@
 <template>
    <div class="container">
-     <h1><i class="bx bx-spreadsheet" style="margin-right:5px;"/>Legg til et prosjekt</h1>
+     <h2>Legg til et prosjekt</h2>
      <vs-input
        v-model="addProjectId"
        class="container__input"
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { postData } from '../utils/requests';
+import { postData, getData } from '../../utils/requests';
 
 export default {
   name: 'addProject',
@@ -50,12 +50,15 @@ export default {
       const POST = {
         projectId: Number(this.addProjectId),
       };
-      try {
-        await postData(`${this.$store.state.baseUrl}/project`, POST);
+      const response = await postData(`${this.$store.state.baseUrl}/project`, POST);
+      if (response.status === 200) {
         this.messageColor = 'message-success';
         this.message = 'Prosjektet ble lagt til.';
-      } catch (e) {
-        console.error(e);
+        // Send new project back
+        let newProject = await getData(`${this.$store.state.baseUrl}/project?projectId=${this.addProjectId}`);
+        newProject = await newProject.json();
+        this.$emit('addedNewProject', newProject);
+      } else {
         this.messageColor = 'message-danger';
         this.message = 'Det oppsto en feil.';
       }
@@ -68,13 +71,11 @@ export default {
 
 <style lang="scss" scoped>
   .container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin-top: 50px;
 
     > .container__input {
-      margin-top: 50px;
+      margin: 50px auto;
+      width: fit-content;
     }
 
     > .container__button {
@@ -85,6 +86,10 @@ export default {
       &:hover {
         transform: translate(0, 0);
       }
+    }
+
+    > h2 {
+      font-weight: 200;
     }
 
     > p {
@@ -112,7 +117,7 @@ export default {
 </style>
 
 <style lang="scss">
-@import "../style/colors.scss";
+@import "../../style/colors.scss";
 
 .vs-input {
   background: $background-color !important;
