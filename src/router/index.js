@@ -5,7 +5,9 @@ import Session from '../views/Session.vue';
 import NotFound from '../views/NotFound.vue';
 import ThankYou from '../views/ThankYou.vue';
 import Ranking from '../views/Ranking.vue';
-import ChooseProject from '../views/ChooseProject.vue';
+import AllProjects from '../views/AllProjects.vue';
+import store from '../store/index';
+
 import { getData } from '../utils/requests';
 
 Vue.use(VueRouter);
@@ -21,9 +23,6 @@ const routes = [
     path: '/session',
     name: 'session',
     component: Session,
-    beforeLeave: (to, from, next) => {
-      next({ name: 'choose-project' });
-    },
   },
   {
     path: '/thank-you',
@@ -31,14 +30,14 @@ const routes = [
     component: ThankYou,
   },
   {
-    path: '/choose-project',
-    name: 'choose-project',
-    component: ChooseProject,
-  },
-  {
     path: '/ranking',
     name: 'ranking',
     component: Ranking,
+  },
+  {
+    path: '/all-projects',
+    name: 'all-projects',
+    component: AllProjects,
   },
   {
     path: '*',
@@ -53,19 +52,38 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isLoggedIn = checkSession();
-  if (to.name !== 'session' && !isLoggedIn) next({ name: 'session' });
-  else next();
+router.beforeEach(async (to, from, next) => {
+  const hasProject = await checkCurrentProject(store.state);
+  let hasSession = false;
+  if (hasProject) {
+    hasSession = await checkSession(store.state);
+  }
+  if (to.name === 'add-project' || to.name === 'all-projects' || to.name === 'ranking') {
+    next();
+  } else if (to.name !== 'session' && !hasSession) {
+    next({ name: 'session' });
+  } else {
+    next();
+  }
 });
 
-async function checkSession() {
-  let success = true;
-  try {
-    await getData('compare-api.digipat.no/imagePair');
-  } catch (e) {
-    success = true;
-  }
-  return success;
+async function checkSession(state) {
+  const response = await getData(`${state.baseUrl}/imagePair?projectId=${state.currentProject.id}`);
+  return response.status === 200;
 }
+
+function checkCurrentProject(state) {
+  const fromState = state.currentProject;
+  const fromLocalStorage = JSON.parse(localStorage.getItem('currentProject'));
+  if (Object.keys(fromState).length > 0) {
+    return true;
+  }
+  if (Object.keys(fromState).length === 0 && fromLocalStorage !== null) {
+    // State doesnt have currentProject but localstorage does
+    store.commit('setCurrentProject', fromLocalStorage);
+    return true;
+  }
+  return false;
+}
+
 export default router;

@@ -22,12 +22,15 @@
     >
       Neste<i class="bx bx-caret-right" />
     </vs-button>
-    <vs-button transparent size="xl" color="#313131" class="exitButton" to="/thank-you">
-      Logg ut<i class="bx bx-log-out"/>
-    </vs-button>
-    <vs-button transparent size="xl" color="#313131" class="changeProjectButton" to="/choose-project">
-      <i class="bx bx-list-ul" style="margin-right: 5px;"/>Bytt prosjekt
-    </vs-button>
+    <div class="buttons">
+      <vs-button transparent size="xl" color="#313131" @click="changeProject">
+        <i class="bx bx-edit" style="margin-right: 5px;"/>Bytt prosjekt
+      </vs-button>
+      <vs-button transparent size="xl" color="#313131" to="/thank-you">
+        <i class="bx bx-log-out" style="margin-right: 5px;"/>Logg ut
+      </vs-button>
+    </div>
+    <p class="project"><i class="bx bx-list-ul" style="margin-right: 5px;"/>{{ currentProject.name }}</p>
   </div>
 </template>
 
@@ -46,9 +49,16 @@ export default {
       chosenImage: null,
     };
   },
+  computed: {
+    currentProject() {
+      return this.$store.state.currentProject;
+    },
+  },
   methods: {
     async fetchImages() {
-      return getData(`${this.$store.state.baseUrl}/imagePair`);
+      let response = await getData(`${this.$store.state.baseUrl}/imagePair?projectId=${this.$store.state.currentProject.id}`);
+      response = await response.json();
+      return response;
     },
     chooseImage(newId) {
       this.chosenImage = newId;
@@ -62,6 +72,7 @@ export default {
       });
       const looserId = this.images.find(image => image.id !== this.chosenImage).id;
       const data = {
+        projectId: this.$store.state.currentProject.id,
         chosen: {
           id: this.chosenImage,
         },
@@ -76,12 +87,10 @@ export default {
       await new Promise(resolve => setTimeout(resolve, 500));
       loading.close();
     },
-  },
-  beforeCreate() {
-    const localStorageProject = JSON.parse(localStorage.getItem('currentProject'));
-    const globalStateProject = this.$store.state.currentProject;
-    if (globalStateProject === null && localStorageProject === null) this.$router.push('/choose-project');
-    else if (globalStateProject === null && localStorageProject !== null) this.$store.commit('setCurrentProject', localStorageProject);
+    async changeProject() {
+      await getData(`${this.$store.state.baseUrl}/session?logout=true`);
+      await this.$router.push('/session');
+    },
   },
   async created() {
     const loading = this.$vs.loading({
@@ -130,16 +139,18 @@ h1 {
   }
 }
 
-.exitButton {
+.buttons {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  right: 5px;
+  top: 5px;
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;
 }
 
-
-.changeProjectButton {
+.project {
   position: absolute;
   top: 10px;
-  left: 10px;
+  left: 15px;
+  font-size: 1rem;
 }
 </style>

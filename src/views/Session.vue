@@ -32,12 +32,25 @@
         </vs-select>
       </div>
     </div>
-    <vs-button class="continue-button" size="xl" color="#b395f3" transparent @click="handleClick">Fortsett <i class="bx bx-chevron-right"/></vs-button>
+    <div class="container">
+      <h3><i class="bx bx-list-ul" />Velg prosjekt</h3>
+      <p>Velg hvilket prosjekt du ønsker å gjøre sammenligninger på.</p>
+      <div class="project" v-if="availableProjects.length > 0">
+        <vs-select color="#b395f3" placeholder="Velg prosjekt" v-model="selectedProject">
+          <template v-for="(project, index) in availableProjects">
+            <vs-option :key="project.id" :label="project.name" :value="index + 1">
+              {{ project.name }}
+            </vs-option>
+          </template>
+        </vs-select>
+      </div>
+    </div>
+    <vs-button class="continue-button" size="xl" color="#b395f3" transparent @click="handleClick">Begynn sammenligning <i class="bx bx-chevron-right"/></vs-button>
   </div>
 </template>
 
 <script>
-import { postData } from '../utils/requests';
+import { getData, postData } from '../utils/requests';
 
 export default {
   name: 'Session',
@@ -45,6 +58,7 @@ export default {
     return {
       screen: '',
       location: '',
+      selectedProject: '',
       screenTypes: [
         {
           label: 'Medisinsk',
@@ -145,6 +159,7 @@ export default {
           value: 'andre',
         },
       ],
+      availableProjects: [],
     };
   },
   methods: {
@@ -153,12 +168,14 @@ export default {
         this.handleError();
         return;
       }
+      await this.$store.commit('setCurrentProject', this.availableProjects[this.selectedProject - 1]);
       const data = {
+        projectId: this.$store.state.currentProject.id,
         monitorType: this.screen,
         hospital: this.location,
       };
       await postData(`${this.$store.state.baseUrl}/session`, data);
-      await this.$router.push('/choose-project');
+      await this.$router.push({ name: 'home' });
     },
     handleError() {
       this.$vs.notification({
@@ -168,6 +185,14 @@ export default {
         text: 'For å gå videre må du fylle ut både feltet for skjerm-type og institusjon.',
       });
     },
+    async getAllProjects() {
+      let response = await getData(`${this.$store.state.baseUrl}/project`);
+      response = await response.json();
+      this.availableProjects = response.filter(project => project.active);
+    },
+  },
+  async created() {
+    await this.getAllProjects();
   },
 };
 </script>
@@ -205,13 +230,17 @@ h3 {
 
 .location {
   width: fit-content;
-  margin: 50px auto;
+  margin: auto;
   border-radius: 43px;
+}
+
+.project {
+  margin: auto;
+  width: fit-content;
 }
 
 .continue-button {
   margin: auto;
-  top: 50px;
 }
 </style>
 
@@ -220,23 +249,6 @@ h3 {
 
 .vs-notification-parent {
   font-family: 'Comfortaa', Helvetica, Arial, sans-serif;
-}
-
-.vs-input {
-  background: $background-color !important;
-  box-shadow: 5px 5px 10px #d2cfd9, -5px -5px 10px #ffffff;
-  padding: 17px 13px 17px 10px !important;
-  width: 400px !important;
-  font-size: 1.4rem;
-
-  &:focus {
-    box-shadow: inset 2px 2px 4px #d2cfd9, inset -2px -2px 4px #ffffff;
-    margin-top: 3px;
-  }
-}
-
-.vs-input__label {
-  font-size: 1.2rem !important;
 }
 
 .vs-select {

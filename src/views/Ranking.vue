@@ -1,27 +1,38 @@
 <template>
   <div class="container">
-    <h2>Resultat</h2>
+    <h1>Resultat</h1>
     <div class="container__form">
-      <vs-checkbox class="checkbox" color="rgb(59,222,200)" v-model="moreThanOneRanking">
-        Mer enn én rangering
-        <template #icon>
-          <i class="bx bx-check" />
-        </template>
-      </vs-checkbox>
-      <vs-select v-model="sorting" color="#b395f3">
-        <vs-option label="Score høy-lav" value="score_highlow">
-          Score høy-lav
-        </vs-option>
-        <vs-option label="Score lav-høy" value="score_lowhigh">
-          Score lav-høy
-        </vs-option>
-        <vs-option label="Antall rangeringer høy-lav" value="rankings_highlow">
-          Antall rangeringer høy-lav
-        </vs-option>
-        <vs-option label="Antall rangeringer lav-høy" value="rankings_lowhigh">
-          Antall rangeringer lav-høy
-        </vs-option>
-      </vs-select>
+      <div class="project" v-if="availableProjects.length > 0">
+        <vs-select color="#b395f3" placeholder="Velg prosjekt" v-model="selectedProject">
+          <template v-for="(project, index) in availableProjects">
+            <vs-option :key="project.id" :label="project.name" :value="index + 1">
+              {{ project.name }}
+            </vs-option>
+          </template>
+        </vs-select>
+      </div>
+      <div>
+        <vs-select v-model="sorting" color="#b395f3">
+          <vs-option label="Score høy-lav" value="score_highlow">
+            Score høy-lav
+          </vs-option>
+          <vs-option label="Score lav-høy" value="score_lowhigh">
+            Score lav-høy
+          </vs-option>
+          <vs-option label="Antall rangeringer høy-lav" value="rankings_highlow">
+            Antall rangeringer høy-lav
+          </vs-option>
+          <vs-option label="Antall rangeringer lav-høy" value="rankings_lowhigh">
+            Antall rangeringer lav-høy
+          </vs-option>
+        </vs-select>
+        <vs-checkbox class="checkbox" color="rgb(59,222,200)" v-model="moreThanOneRanking">
+          Mer enn én rangering
+          <template #icon>
+            <i class="bx bx-check" />
+          </template>
+        </vs-checkbox>
+      </div>
     </div>
     <div class="container__results">
       <div class="container__results__header">
@@ -55,13 +66,17 @@ export default {
     return {
       moreThanOneRanking: false,
       sorting: 'score_highlow',
+      selectedProject: '',
+      availableProjects: [],
       all: [],
       entries: [],
     };
   },
   methods: {
-    async getAll() {
-      this.all = await getData(`${this.$store.state.baseUrl}/ranking`);
+    async getAllEntries() {
+      let response = await getData(`${this.$store.state.baseUrl}/ranking?projectId=${this.availableProjects[this.selectedProject - 1].id}`);
+      response = await response.json();
+      this.all = response;
       this.updateEntries();
     },
     sort(array) {
@@ -91,6 +106,11 @@ export default {
       this.entries = this.filter(this.entries);
       this.entries = this.sort(this.entries);
     },
+    async getAllProjects() {
+      let response = await getData(`${this.$store.state.baseUrl}/project`);
+      response = await response.json();
+      this.availableProjects = response;
+    },
   },
   watch: {
     moreThanOneRanking() {
@@ -99,24 +119,36 @@ export default {
     sorting() {
       this.updateEntries();
     },
+    selectedProject() {
+      this.getAllEntries();
+      this.updateEntries();
+    },
   },
   async created() {
-    this.getAll();
+    await this.getAllProjects();
+    this.selectedProject = 1;
+    await this.getAllEntries();
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .container {
-  > h2 {
-    margin: 4rem;
-    font-weight: 500;
+  > h1 {
+   font-weight: 500;
   }
 
   > .container__form {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: auto auto;
+    padding: 0 5rem;
     justify-items: center;
+    text-align: center;
+
+    > div > .checkbox {
+      justify-content: center;
+      margin: 1rem 0;
+    }
   }
 }
 

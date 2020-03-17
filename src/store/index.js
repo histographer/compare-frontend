@@ -6,7 +6,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     baseUrl: null,
-    currentProject: null,
+    currentProject: {},
   },
   mutations: {
     changeBaseURL(state, payload) {
