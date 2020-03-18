@@ -25,7 +25,7 @@ Vue.config.productionTip = false;
 
 
 // Setting the baseURL (middleware)
-store.commit('changeBaseURL', { newUrl: 'localhost:9292' });
+store.commit('changeBaseURL', { newUrl: 'compare-api.digipat.no' });
 
 new Vue({
   router,
