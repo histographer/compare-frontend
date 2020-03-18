@@ -16,6 +16,13 @@ export async function postData(url, data) {
 }
 
 export async function getData(url = '') {
-  const response = await (fetch(`http://${url}`));
+  const response = await (fetch(`http://${url}`, {
+    method: 'GET',
+    mode: 'cors',
+    cache: 'no-cache',
+    credentials: 'include',
+    redirect: 'follow',
+    referrerPolicy: 'no-referrer',
+  }));
   return response;
 }
