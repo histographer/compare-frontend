@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     baseUrl: null,
     currentProject: {},
+    amountDone: 0,
   },
   mutations: {
     changeBaseURL(state, payload) {
@@ -15,6 +16,9 @@ export default new Vuex.Store({
     setCurrentProject(state, payload) {
       state.currentProject = payload;
       localStorage.setItem('currentProject', JSON.stringify(payload));
+    },
+    increaseAmountDone(state) {
+      state.amountDone += 1;
     },
   },
   actions: {},

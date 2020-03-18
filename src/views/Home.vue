@@ -2,12 +2,13 @@
   <div class="content">
     <h1>Hvilket av snittene ser best ut?</h1>
     <div class="images">
-      <template v-for="image in images">
+      <template v-for="(image, index) in images">
         <CytomineImage
           :key="image.id"
           :image="image"
           :chosen="image.id === chosenImage"
           v-on:chooseImage="chooseImage"
+          :ref="`image-${index}`"
         />
       </template>
     </div>
@@ -65,10 +66,10 @@ export default {
     },
     async sendChoosen() {
       const loading = this.$vs.loading({
-        type: 'corners',
+        type: 'points',
         background: '#f7f3ff',
-        color: '#A581EF',
-        opacity: 0.7,
+        color: '#b395f3',
+        opacity: 0.5,
       });
       const looserId = this.images.find(image => image.id !== this.chosenImage).id;
       const data = {
@@ -82,10 +83,27 @@ export default {
       };
       await postData(`${this.$store.state.baseUrl}/scoring`, data);
       this.images = await this.fetchImages();
+      this.$store.commit('increaseAmountDone');
       this.chosenImage = null;
       // Added for more delay to better the user experience
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise(resolve => setTimeout(resolve, 800));
       loading.close();
+
+      // Set initial zoom and center incase the new images contain one of the same images as before
+      Object.keys(this.$refs).forEach((ref) => {
+        this.$refs[ref][0].setInitialZoom();
+        this.$refs[ref][0].setImageCenter();
+      });
+
+      const { amountDone } = this.$store.state;
+      this.$vs.notification({
+        duration: 6000,
+        position: 'bottom-left',
+        sticky: true,
+        border: '#b395f3',
+        title: `Du har gjort ${amountDone} ${amountDone === 1 ? 'sammenligning' : 'sammenligninger'}`,
+        text: 'Godt jobba! For hver sammenligning du gjør får vi en bedre forståelse av hvordan snittene er rangert mellom hverandre.',
+      });
     },
     async changeProject() {
       await getData(`${this.$store.state.baseUrl}/session?logout=true`);
