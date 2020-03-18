@@ -11,13 +11,21 @@ import 'vuesax/dist/vuesax.css';
 
 Vue.use(VueLayers);
 Vue.use(ZoomifySource);
-Vue.use(Vuesax);
+Vue.use(Vuesax, {
+  colors: {
+    primary: '#b395f3',
+    success: 'rgb(23, 201, 100)',
+    danger: 'rgb(242, 19, 93)',
+    warning: 'rgb(255, 130, 0)',
+    dark: 'rgb(36, 33, 69)',
+  },
+});
 
 Vue.config.productionTip = false;
 
 
 // Setting the baseURL (middleware)
-store.commit('changeBaseURL', { newUrl: 'compare-api.digipat.no' });
+store.commit('changeBaseURL', { newUrl: 'localhost:9292' });
 
 new Vue({
   router,

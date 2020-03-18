@@ -2,12 +2,13 @@
   <div class="content">
     <h1>Hvilket av snittene ser best ut?</h1>
     <div class="images">
-      <template v-for="image in images">
+      <template v-for="(image, index) in images">
         <CytomineImage
           :key="image.id"
           :image="image"
           :chosen="image.id === chosenImage"
           v-on:chooseImage="chooseImage"
+          :ref="`image-${index}`"
         />
       </template>
     </div>
@@ -87,6 +88,13 @@ export default {
       // Added for more delay to better the user experience
       await new Promise(resolve => setTimeout(resolve, 800));
       loading.close();
+
+      // Set initial zoom and center incase the new images contain one of the same images as before
+      Object.keys(this.$refs).forEach((ref) => {
+        this.$refs[ref][0].setInitialZoom();
+        this.$refs[ref][0].setImageCenter();
+      });
+
       const { amountDone } = this.$store.state;
       this.$vs.notification({
         duration: 6000,
