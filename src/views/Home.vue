@@ -1,6 +1,17 @@
 <template>
   <div class="content">
-    <h1>Hvilket av snittene ser best ut?</h1>
+    <div class="content__header">
+      <p class="project"><i class="bx bx-list-ul" style="margin-right: 5px;"/>{{ currentProject.name }}</p>
+      <h1>Hvilket av snittene ser best ut?</h1>
+      <div class="buttons">
+        <vs-button transparent size="xl" color="#313131" @click="changeProject">
+          <i class="bx bx-edit" style="margin-right: 5px;"/>Bytt prosjekt
+        </vs-button>
+        <vs-button transparent size="xl" color="#313131" to="/thank-you">
+          <i class="bx bx-log-out" style="margin-right: 5px;"/>Logg ut
+        </vs-button>
+      </div>
+    </div>
     <div class="images">
       <template v-for="(image, index) in images">
         <CytomineImage
@@ -23,15 +34,6 @@
     >
       Neste<i class="bx bx-caret-right" />
     </vs-button>
-    <div class="buttons">
-      <vs-button transparent size="xl" color="#313131" @click="changeProject">
-        <i class="bx bx-edit" style="margin-right: 5px;"/>Bytt prosjekt
-      </vs-button>
-      <vs-button transparent size="xl" color="#313131" to="/thank-you">
-        <i class="bx bx-log-out" style="margin-right: 5px;"/>Logg ut
-      </vs-button>
-    </div>
-    <p class="project"><i class="bx bx-list-ul" style="margin-right: 5px;"/>{{ currentProject.name }}</p>
   </div>
 </template>
 
@@ -133,23 +135,27 @@ body {
   height: 100%;
   flex-flow: column;
 }
+.content__header {
+  display: grid;
+  grid-template-columns: 1.2fr 2fr 1.2fr;
+  justify-items: center;
+  align-items: center;
+  > h1 {
+    font-weight: 400;
+  }
+}
 .images {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 10px;
   justify-items: stretch;
-  height: calc(80% - 30px);
-}
-h1 {
-  color: black;
-  font-weight: 400;
-  font-size: 48px;
+  height: calc(90% - 30px);
 }
 
 .nextButton {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  right: 1rem;
+  bottom: 1rem;
   box-shadow: 8px 8px 15px #e6e2ed, -8px -8px 15px #ffffff;
 
   &:hover {
@@ -158,17 +164,11 @@ h1 {
 }
 
 .buttons {
-  position: absolute;
-  right: 5px;
-  top: 5px;
   display: grid;
   grid-template-columns: 1fr 0.8fr;
 }
 
 .project {
-  position: absolute;
-  top: 10px;
-  left: 15px;
   font-size: 1rem;
 }
 </style>
