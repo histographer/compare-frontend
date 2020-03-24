@@ -25,7 +25,7 @@
 <script>
 import ListProject from '../components/Project/ListProject.vue';
 import AddProject from '../components/Project/AddProject.vue';
-import { getData } from '../utils/requests';
+import { getData, postData } from '../utils/requests';
 
 export default {
   name: 'AllProjects',
@@ -42,7 +42,11 @@ export default {
   methods: {
     async changeActiveProject(index) {
       this.activeProjects[index] = !this.activeProjects[index];
-      await getData(`${this.$store.state.baseUrl}/project/update?projectId=${this.allProjects[index].id}&active=${this.activeProjects[index]}`);
+      const data = {
+        projectId: this.allProjects[index].id,
+        active: this.activeProjects[index],
+      };
+      await postData(`${this.$store.state.baseUrl}/project/update`, data);
     },
     updateAllProjects(project) {
       this.allProjects.push(project);
