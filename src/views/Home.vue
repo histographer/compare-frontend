@@ -17,6 +17,7 @@
         <CytomineImage
           :key="image.id"
           :image="image"
+          :index="index"
           :chosen="image.id === chosenImage"
           v-on:chooseImage="chooseImage"
           :ref="`image-${index}`"
@@ -147,8 +148,9 @@ body {
 .images {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
+  grid-gap: 0;
   justify-items: stretch;
+  margin: 0 25px;
   height: calc(90% - 30px);
 }
 

@@ -1,11 +1,11 @@
 <template>
   <div class="container" ref="container">
-    <div class="container__viewer">
+    <div :class="(index === 0 ? 'left': 'right') + ' container__viewer'">
       <vl-map
         :load-tiles-while-animating="true"
         :load-tiles-while-interacting="true"
         data-projection="EPSG:3857"
-        class="container__viewer__image"
+        :class="(index === 0 ? 'left': 'right') + ' container__viewer__image'"
         ref="map"
       >
         <vl-view :zoom.sync="zoom" :center.sync="center" :rotation.sync="rotation" :max-zoom="maxZoom" :min-zoom="minZoom"></vl-view>
@@ -56,6 +56,7 @@ export default {
   },
   props: {
     image: Object,
+    index: Number,
     chosen: Boolean,
   },
   data() {
@@ -132,19 +133,42 @@ export default {
   height: 100%;
   flex-flow: column;
   border-radius: 30px;
-  margin: auto;
-  width: calc(100% - 5vh);
+  width: 100%;
 
   > .container__viewer {
     display: flex;
     height: calc(100% - 5rem);
+    border-radius: 30px;
+    background: #f7f3ff;
+    box-shadow: 5px 5px 14px #d2cfd9, -5px -5px 14px #ffffff;
+
+    &.left {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
+
+    &.right {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+    }
 
     > .container__viewer__image {
-      border-radius: 30px;
-      box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
       width: 100%;
       overflow: hidden;
       height: 100%;
+      border-radius: 30px;
+    }
+
+    > .left {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+      border-right: 1px solid #2c3e506b;
+    }
+
+    > .right {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+      border-left: 1px solid #2c3e506b;
     }
   }
 
