@@ -7,6 +7,7 @@ export default new Vuex.Store({
   state: {
     baseUrl: null,
     currentProject: {},
+    skipped: [],
     amountDone: 0,
   },
   mutations: {
@@ -19,6 +20,9 @@ export default new Vuex.Store({
     },
     increaseAmountDone(state) {
       state.amountDone += 1;
+    },
+    addToSkipped(state, payload) {
+      state.skipped.push(payload);
     },
   },
   actions: {},

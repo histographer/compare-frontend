@@ -35,6 +35,15 @@
     >
       Neste<i class="bx bx-caret-right" />
     </vs-button>
+    <vs-button
+      transparent
+      color="#afafaf"
+      size="xl"
+      class="skipButton"
+      @click="skipPair"
+    >
+      Ingen sikker kvalitetsforskjell
+    </vs-button>
   </div>
 </template>
 
@@ -108,6 +117,10 @@ export default {
         text: 'Godt jobba! For hver sammenligning du gjør får vi en bedre forståelse av hvordan snittene er rangert mellom hverandre.',
       });
     },
+    async skipPair() {
+      console.log('skipping pair');
+      this.$store.commit('addToSkipped', this.images.map(image => image.id));
+    },
     async changeProject() {
       await getData(`${this.$store.state.baseUrl}/session?logout=true`);
       await this.$router.push('/session');
@@ -163,6 +176,11 @@ body {
   &:hover {
     box-shadow: none;
   }
+}
+
+.skipButton {
+  margin: -3.5rem auto 0 auto;
+  width: fit-content;
 }
 
 .buttons {

@@ -183,7 +183,7 @@ export default {
     max-width: 400px;
     box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
     width: 100%;
-    margin: 3rem auto auto;
+    margin: 5rem auto auto;
     min-height: 60px;
     font-size: 24px;
   }
