@@ -23,8 +23,6 @@
       </vl-map>
     </div>
     <div class="container__panels">
-      <scale-line :image="image" :zoom="zoom" :client-width="clientWidth"/>
-
       <div class="custom-overview" ref="overview">
       </div>
     </div>
@@ -47,13 +45,8 @@
 import View from 'ol/View';
 import OverviewMap from 'ol/control/OverviewMap';
 
-import ScaleLine from './ScaleLine.vue';
-
 export default {
   name: 'CytomineImage',
-  components: {
-    ScaleLine,
-  },
   props: {
     image: Object,
     index: Number,
