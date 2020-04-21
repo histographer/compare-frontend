@@ -69,7 +69,18 @@ export default {
   },
   methods: {
     async fetchImages() {
-      let response = await getData(`${this.$store.state.baseUrl}/imagePair?projectId=${this.$store.state.currentProject.id}`);
+      let uriComponent;
+      if (this.$store.state.skipped.length > 0) {
+        const skipped = `[${this.$store.state.skipped.map(skippedPair => `[${skippedPair}]`)}]`;
+        uriComponent = `?projectId=${this.$store.state.currentProject.id}&skipped=${encodeURIComponent(skipped)}`;
+      } else {
+        uriComponent = `?projectId=${this.$store.state.currentProject.id}`;
+      }
+      let response = await getData(`${this.$store.state.baseUrl}/imagePair${uriComponent}`);
+      if (response.status === 404) {
+        // Go to logout-page since the user is done with all the available comparisons
+        await this.$router.push({ name: 'thank-you' });
+      }
       response = await response.json();
       return response;
     },
@@ -118,8 +129,23 @@ export default {
       });
     },
     async skipPair() {
-      console.log('skipping pair');
-      this.$store.commit('addToSkipped', this.images.map(image => image.id));
+      const loading = this.$vs.loading({
+        type: 'points',
+        background: '#f7f3ff',
+        color: '#b395f3',
+        opacity: 0.5,
+      });
+      await this.$store.commit('addToSkipped', this.images.map(image => image.id));
+      this.images = await this.fetchImages();
+      this.chosenImage = null;
+      await new Promise(resolve => setTimeout(resolve, 800));
+      loading.close();
+
+      // Set initial zoom and center incase the new images contain one of the same images as before
+      Object.keys(this.$refs).forEach((ref) => {
+        this.$refs[ref][0].setInitialZoom();
+        this.$refs[ref][0].setImageCenter();
+      });
     },
     async changeProject() {
       await getData(`${this.$store.state.baseUrl}/session?logout=true`);
