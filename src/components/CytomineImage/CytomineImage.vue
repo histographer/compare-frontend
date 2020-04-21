@@ -180,7 +180,7 @@ export default {
 
   > .container__button {
     max-height: 5rem;
-    max-width: 400px;
+    max-width: 375px;
     box-shadow: 7px 7px 14px #e1dde8, -7px -7px 14px #ffffff;
     width: 100%;
     margin: 5rem auto auto;

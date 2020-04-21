@@ -42,7 +42,7 @@
       class="skipButton"
       @click="skipPair"
     >
-      Ingen sikker kvalitetsforskjell
+      Ingen sikker forskjell
     </vs-button>
   </div>
 </template>
@@ -207,6 +207,12 @@ body {
 .skipButton {
   margin: -3.5rem auto 0 auto;
   width: fit-content;
+}
+
+@media only screen and (max-width: 1200px) {
+  .skipButton {
+    width: 140px;
+  }
 }
 
 .buttons {
