@@ -35,6 +35,15 @@
     >
       Neste<i class="bx bx-caret-right" />
     </vs-button>
+    <vs-button
+      transparent
+      color="#afafaf"
+      size="xl"
+      class="skipButton"
+      @click="skipPair"
+    >
+      Ingen sikker forskjell
+    </vs-button>
   </div>
 </template>
 
@@ -60,7 +69,18 @@ export default {
   },
   methods: {
     async fetchImages() {
-      let response = await getData(`${this.$store.state.baseUrl}/imagePair?projectId=${this.$store.state.currentProject.id}`);
+      let uriComponent;
+      if (this.$store.state.skipped.length > 0) {
+        const skipped = `[${this.$store.state.skipped.map(skippedPair => `[${skippedPair}]`)}]`;
+        uriComponent = `?projectId=${this.$store.state.currentProject.id}&skipped=${encodeURIComponent(skipped)}`;
+      } else {
+        uriComponent = `?projectId=${this.$store.state.currentProject.id}`;
+      }
+      let response = await getData(`${this.$store.state.baseUrl}/imagePair${uriComponent}`);
+      if (response.status === 404) {
+        // Go to logout-page since the user is done with all the available comparisons
+        await this.$router.push({ name: 'thank-you' });
+      }
       response = await response.json();
       return response;
     },
@@ -85,8 +105,9 @@ export default {
         },
       };
       await postData(`${this.$store.state.baseUrl}/scoring`, data);
+      await this.$store.commit('addToSkipped', this.images.map(image => image.id));
       this.images = await this.fetchImages();
-      this.$store.commit('increaseAmountDone');
+      await this.$store.commit('increaseAmountDone');
       this.chosenImage = null;
       // Added for more delay to better the user experience
       await new Promise(resolve => setTimeout(resolve, 800));
@@ -106,6 +127,25 @@ export default {
         border: '#b395f3',
         title: `Du har gjort ${amountDone} ${amountDone === 1 ? 'sammenligning' : 'sammenligninger'}`,
         text: 'Godt jobba! For hver sammenligning du gjør får vi en bedre forståelse av hvordan snittene er rangert mellom hverandre.',
+      });
+    },
+    async skipPair() {
+      const loading = this.$vs.loading({
+        type: 'points',
+        background: '#f7f3ff',
+        color: '#b395f3',
+        opacity: 0.5,
+      });
+      await this.$store.commit('addToSkipped', this.images.map(image => image.id));
+      this.images = await this.fetchImages();
+      this.chosenImage = null;
+      await new Promise(resolve => setTimeout(resolve, 800));
+      loading.close();
+
+      // Set initial zoom and center incase the new images contain one of the same images as before
+      Object.keys(this.$refs).forEach((ref) => {
+        this.$refs[ref][0].setInitialZoom();
+        this.$refs[ref][0].setImageCenter();
       });
     },
     async changeProject() {
@@ -162,6 +202,17 @@ body {
 
   &:hover {
     box-shadow: none;
+  }
+}
+
+.skipButton {
+  margin: -3.5rem auto 0 auto;
+  width: fit-content;
+}
+
+@media only screen and (max-width: 1200px) {
+  .skipButton {
+    width: 140px;
   }
 }
 
