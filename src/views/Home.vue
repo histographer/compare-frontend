@@ -105,8 +105,9 @@ export default {
         },
       };
       await postData(`${this.$store.state.baseUrl}/scoring`, data);
+      await this.$store.commit('addToSkipped', this.images.map(image => image.id));
       this.images = await this.fetchImages();
-      this.$store.commit('increaseAmountDone');
+      await this.$store.commit('increaseAmountDone');
       this.chosenImage = null;
       // Added for more delay to better the user experience
       await new Promise(resolve => setTimeout(resolve, 800));
