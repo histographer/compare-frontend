@@ -36,6 +36,7 @@
     </div>
     <div class="container__results">
       <div class="container__results__header">
+        <h2>Navn</h2>
         <h2>ID</h2>
         <h2>Score</h2>
         <h2>Antall rangeringer</h2>
@@ -45,6 +46,7 @@
           v-for="(entry, index) in entries"
           :key="index"
           :id="entry.id"
+          :fileName="entry.fileName"
           :score="entry.score"
           :rankings="entry.rankings"
         />
@@ -158,7 +160,7 @@ export default {
 
 .container__results__header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   padding: 0 1rem;
 
   > h2 {
