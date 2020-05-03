@@ -1,6 +1,6 @@
 export async function postData(url, data) {
   // Default options are marked with *
-  const response = await fetch(`http://${url}`, {
+  const response = await fetch(`https://${url}`, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
@@ -16,7 +16,7 @@ export async function postData(url, data) {
 }
 
 export async function getData(url = '') {
-  const response = await (fetch(`http://${url}`, {
+  const response = await (fetch(`https://${url}`, {
     method: 'GET',
     mode: 'cors',
     cache: 'no-cache',
